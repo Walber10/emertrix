@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useApp } from "@/contexts/AppContext";
 import { useOnboardingState } from "@/hooks/useOnboardingState";
 import { EmertrixLogo } from "@/components/EmertrixLogo";
+import { useTestBackend } from "@/hooks/useOnboarding";
 
 interface InvitedAdmin {
   id: string;
@@ -189,6 +190,17 @@ const AccountSetup = () => {
     username: ""
   });
 
+  const { status, message } = useTestBackend();
+  console.log("message", message)
+
+  const testBackend = () => {
+    if (status === 'success') {
+      alert(message);
+    } else if (status === 'error') {
+      alert('Backend not reachable');
+    }
+  };
+
   const updateFormData = (field: keyof AccountSetupData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -316,7 +328,7 @@ const AccountSetup = () => {
       const limits = getPlanLimits(selectedPlanLocal);
       updateState({
         plan: {
-          tier: selectedPlanLocal as any,
+          tier: selectedPlanLocal as 'tier1' | 'tier2' | 'tier3' | 'enterprise',
           seats: limits.seats,
           facilities: limits.facilities,
           billing: 'annual'

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useBackendHealth, useOnboardingMutation } from '../api/queries';
 
 export interface OnboardingData {
   organization: {
@@ -28,40 +28,59 @@ export interface OnboardingData {
 }
 
 export interface OnboardingResponse {
-  organization: any;
-  owner: any;
-  invitedAdmins: any[];
+  organization: {
+    _id: string;
+    name: string;
+    address: string;
+    phoneNumber: string;
+    industry: string;
+    organizationSize: string;
+    selectedPlan: string;
+    natureOfWork?: string;
+    abn?: string;
+    maxFacilities: number;
+    totalSeats: number;
+    ownerId?: string;
+    createdAt: string;
+  };
+  owner: {
+    _id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    organizationId: string;
+    role: string;
+    inviteStatus: string;
+    createdAt: string;
+  };
+  invitedAdmins: Array<{
+    _id: string;
+    name: string;
+    email: string;
+    phone?: string;
+    organizationId: string;
+    role: string;
+    inviteStatus: string;
+    createdAt: string;
+  }>;
+}
+
+export function useTestBackend() {
+  const { data, isLoading, error, isError } = useBackendHealth();
+  
+  return {
+    status: isLoading ? 'loading' : isError ? 'error' : 'success',
+    message: error ? error.message : typeof data === 'string' ? data : JSON.stringify(data),
+  };
 }
 
 export function useOnboarding() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<OnboardingResponse | null>(null);
-
-  const submitOnboarding = async (data: OnboardingData) => {
-    setLoading(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      const response = await fetch('/api/onboarding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || errorData.message || 'Onboarding failed');
-      }
-      const result = await response.json();
-      setSuccess(result);
-      return result;
-    } catch (err: any) {
-      setError(err.message || 'Onboarding failed');
-      throw err;
-    } finally {
-      setLoading(false);
-    }
+  const mutation = useOnboardingMutation();
+  
+  return {
+    submitOnboarding: mutation.mutate,
+    loading: mutation.isPending,
+    error: mutation.error?.message || null,
+    success: mutation.data || null,
   };
-
-  return { submitOnboarding, loading, error, success };
 }

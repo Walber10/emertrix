@@ -1,16 +1,6 @@
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
+import { app } from './app';
 
-const app = express();
-const PORT = 4000;
-
-app.use(cors());
-app.use(bodyParser.json());
-
-app.get('/', (req, res) => {
-  res.send('Backend API is running!');
-});
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

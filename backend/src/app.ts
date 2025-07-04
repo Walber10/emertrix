@@ -18,5 +18,4 @@ app.use((req, res, next) => {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(router);
-app.use("/api/onboarding", onboardingRouter); 
+app.use('/api', router);
