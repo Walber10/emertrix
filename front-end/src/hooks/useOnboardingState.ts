@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { OnboardingState, OnboardingStep, PlanSelection } from '@/types/onboarding';
 
@@ -9,7 +8,7 @@ const getInitialOnboardingState = (): OnboardingState => ({
   organization: null,
   account: null,
   facilities: [],
-  currentStep: 'plan-selection'
+  currentStep: 'plan-selection',
 });
 
 const getPlanLimits = (tier: string): { seats: number; facilities: number } => {
@@ -37,26 +36,35 @@ export const useOnboardingState = () => {
     }
   });
 
-  const updateState = useCallback((updates: Partial<OnboardingState>) => {
-    const newState = { ...state, ...updates };
-    setState(newState);
-    localStorage.setItem(ONBOARDING_KEY, JSON.stringify(newState));
-  }, [state]);
+  const updateState = useCallback(
+    (updates: Partial<OnboardingState>) => {
+      const newState = { ...state, ...updates };
+      setState(newState);
+      localStorage.setItem(ONBOARDING_KEY, JSON.stringify(newState));
+    },
+    [state],
+  );
 
-  const setPlan = useCallback((tier: string, billing: 'monthly' | 'annual' = 'annual') => {
-    const limits = getPlanLimits(tier);
-    const plan: PlanSelection = {
-      tier: tier as any,
-      seats: limits.seats,
-      facilities: limits.facilities,
-      billing
-    };
-    updateState({ plan, currentStep: 'account-setup' });
-  }, [updateState]);
+  const setPlan = useCallback(
+    (tier: string, billing: 'monthly' | 'annual' = 'annual') => {
+      const limits = getPlanLimits(tier);
+      const plan: PlanSelection = {
+        tier: tier as any,
+        seats: limits.seats,
+        facilities: limits.facilities,
+        billing,
+      };
+      updateState({ plan, currentStep: 'account-setup' });
+    },
+    [updateState],
+  );
 
-  const setCurrentStep = useCallback((step: OnboardingStep) => {
-    updateState({ currentStep: step });
-  }, [updateState]);
+  const setCurrentStep = useCallback(
+    (step: OnboardingStep) => {
+      updateState({ currentStep: step });
+    },
+    [updateState],
+  );
 
   const clearOnboarding = useCallback(() => {
     localStorage.removeItem(ONBOARDING_KEY);
@@ -74,6 +82,6 @@ export const useOnboardingState = () => {
     setPlan,
     setCurrentStep,
     clearOnboarding,
-    getSelectedPlanLimits
+    getSelectedPlanLimits,
   };
 };

@@ -1,37 +1,37 @@
-import Header from "@/components/Header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FileText, Download, Eye, Calendar, User } from "lucide-react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import Header from '@/components/Header';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { FileText, Download, Eye, Calendar, User } from 'lucide-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const EmergencyPlan = () => {
-  const [planStatus, setPlanStatus] = useState<"draft" | "approved" | "archived">("draft");
+  const [planStatus, setPlanStatus] = useState<'draft' | 'approved' | 'archived'>('draft');
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const handleReviewPlan = () => {
     toast({
-      title: "Opening Plan Review",
-      description: "Emergency plan opened for review in a new window",
+      title: 'Opening Plan Review',
+      description: 'Emergency plan opened for review in a new window',
     });
     // In a real app, this would open the plan document in review mode
-    console.log("Opening plan for review");
+    console.log('Opening plan for review');
   };
 
   const handleGenerateReport = () => {
     toast({
-      title: "Generating Report",
-      description: "Emergency plan compliance report is being generated",
+      title: 'Generating Report',
+      description: 'Emergency plan compliance report is being generated',
     });
     // In a real app, this would generate and download a PDF report
-    console.log("Generating emergency plan report");
+    console.log('Generating emergency plan report');
   };
 
   const handleViewPlan = (planVersion: string) => {
     toast({
-      title: "Viewing Plan",
+      title: 'Viewing Plan',
       description: `Opening ${planVersion} for viewing`,
     });
     // In a real app, this would open the plan document in view mode
@@ -40,7 +40,7 @@ const EmergencyPlan = () => {
 
   const handleDownloadPlan = (planVersion: string) => {
     toast({
-      title: "Downloading Plan",
+      title: 'Downloading Plan',
       description: `${planVersion} is being downloaded`,
     });
     // In a real app, this would trigger the download of the plan PDF
@@ -90,7 +90,9 @@ const EmergencyPlan = () => {
                     <div>
                       <CardTitle>Emergency Plan</CardTitle>
                       <CardDescription className="text-blue-100">
-                        Facility: Select Facility | Compliance Status: {planStatus === "approved" ? "Compliant" : "Partially Compliant"} | Not Compliant
+                        Facility: Select Facility | Compliance Status:{' '}
+                        {planStatus === 'approved' ? 'Compliant' : 'Partially Compliant'} | Not
+                        Compliant
                       </CardDescription>
                     </div>
                   </div>
@@ -118,7 +120,8 @@ const EmergencyPlan = () => {
                         </div>
                         <div className="bg-blue-50 p-4 rounded-lg">
                           <p className="text-sm text-blue-800">
-                            In-page header allowing users to scroll and view the Emergency Plan document without needing to download a copy.
+                            In-page header allowing users to scroll and view the Emergency Plan
+                            document without needing to download a copy.
                           </p>
                         </div>
                       </div>
@@ -130,17 +133,17 @@ const EmergencyPlan = () => {
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <span className="text-sm">Emergency Plan v2.1</span>
                           <div className="flex space-x-2">
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
-                              onClick={() => handleViewPlan("Emergency Plan v2.1")}
+                              onClick={() => handleViewPlan('Emergency Plan v2.1')}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
-                              onClick={() => handleDownloadPlan("Emergency Plan v2.1")}
+                              onClick={() => handleDownloadPlan('Emergency Plan v2.1')}
                             >
                               <Download className="h-4 w-4" />
                             </Button>
@@ -149,17 +152,17 @@ const EmergencyPlan = () => {
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <span className="text-sm">Emergency Plan v2.0</span>
                           <div className="flex space-x-2">
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
-                              onClick={() => handleViewPlan("Emergency Plan v2.0")}
+                              onClick={() => handleViewPlan('Emergency Plan v2.0')}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="outline"
-                              onClick={() => handleDownloadPlan("Emergency Plan v2.0")}
+                              onClick={() => handleDownloadPlan('Emergency Plan v2.0')}
                             >
                               <Download className="h-4 w-4" />
                             </Button>
@@ -170,9 +173,15 @@ const EmergencyPlan = () => {
                   </div>
 
                   <div className="flex space-x-4 pt-4 border-t">
-                    <Button onClick={() => navigate("/create-emergency-plan")}>Create New Plan</Button>
-                    <Button variant="outline" onClick={handleReviewPlan}>Review Plan</Button>
-                    <Button variant="outline" onClick={handleGenerateReport}>Generate Report</Button>
+                    <Button onClick={() => navigate('/create-emergency-plan')}>
+                      Create New Plan
+                    </Button>
+                    <Button variant="outline" onClick={handleReviewPlan}>
+                      Review Plan
+                    </Button>
+                    <Button variant="outline" onClick={handleGenerateReport}>
+                      Generate Report
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -187,9 +196,12 @@ const EmergencyPlan = () => {
                 <div className="p-4 border rounded-lg">
                   <h4 className="font-semibold mb-2">Simple Method</h4>
                   <p className="text-sm text-gray-600 mb-3">
-                    Fillable PDF in browser. User manually fills empty sections, text guided, basic experience.
+                    Fillable PDF in browser. User manually fills empty sections, text guided, basic
+                    experience.
                   </p>
-                  <Button onClick={() => navigate("/create-emergency-plan")}>Start Simple Method</Button>
+                  <Button onClick={() => navigate('/create-emergency-plan')}>
+                    Start Simple Method
+                  </Button>
                 </div>
               </CardContent>
             </Card>

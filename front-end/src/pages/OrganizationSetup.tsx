@@ -1,14 +1,26 @@
-
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useForm } from "react-hook-form";
-import { Building2, Users, Settings, CheckCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useForm } from 'react-hook-form';
+import { Building2, Users, Settings, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface OrganizationData {
   companyName: string;
@@ -29,46 +41,46 @@ const OrganizationSetup = () => {
   const navigate = useNavigate();
   const form = useForm<OrganizationData>({
     defaultValues: {
-      companyName: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
-      phone: "",
-      email: "",
-      industry: "",
-      size: "",
-      primaryContact: "",
-      emergencyContact: "",
+      companyName: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      phone: '',
+      email: '',
+      industry: '',
+      size: '',
+      primaryContact: '',
+      emergencyContact: '',
     },
   });
 
   const industries = [
-    "Manufacturing",
-    "Healthcare",
-    "Education",
-    "Retail",
-    "Technology",
-    "Construction",
-    "Hospitality",
-    "Government",
-    "Non-profit",
-    "Other"
+    'Manufacturing',
+    'Healthcare',
+    'Education',
+    'Retail',
+    'Technology',
+    'Construction',
+    'Hospitality',
+    'Government',
+    'Non-profit',
+    'Other',
   ];
 
   const companySizes = [
-    "1-10 employees",
-    "11-50 employees",
-    "51-200 employees",
-    "201-1000 employees",
-    "1000+ employees"
+    '1-10 employees',
+    '11-50 employees',
+    '51-200 employees',
+    '201-1000 employees',
+    '1000+ employees',
   ];
 
   const steps = [
-    { number: 1, title: "Organization Details", icon: Building2 },
-    { number: 2, title: "Industry & Size", icon: Users },
-    { number: 3, title: "Contacts", icon: Settings },
-    { number: 4, title: "Complete", icon: CheckCircle },
+    { number: 1, title: 'Organization Details', icon: Building2 },
+    { number: 2, title: 'Industry & Size', icon: Users },
+    { number: 3, title: 'Contacts', icon: Settings },
+    { number: 4, title: 'Complete', icon: CheckCircle },
   ];
 
   const nextStep = () => {
@@ -84,10 +96,10 @@ const OrganizationSetup = () => {
   };
 
   const onSubmit = (data: OrganizationData) => {
-    console.log("Organization setup complete:", data);
+    console.log('Organization setup complete:', data);
     // Here we would normally save to database
-    localStorage.setItem("organizationData", JSON.stringify(data));
-    navigate("/");
+    localStorage.setItem('organizationData', JSON.stringify(data));
+    navigate('/');
   };
 
   const handleComplete = () => {
@@ -102,29 +114,37 @@ const OrganizationSetup = () => {
           <div className="flex items-center justify-between">
             {steps.map((step, index) => (
               <div key={step.number} className="flex items-center">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                  currentStep >= step.number 
-                    ? "bg-blue-600 border-blue-600 text-white" 
-                    : "border-gray-300 text-gray-400"
-                }`}>
+                <div
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                    currentStep >= step.number
+                      ? 'bg-blue-600 border-blue-600 text-white'
+                      : 'border-gray-300 text-gray-400'
+                  }`}
+                >
                   <step.icon className="h-5 w-5" />
                 </div>
                 <div className="ml-3">
-                  <p className={`text-sm font-medium ${
-                    currentStep >= step.number ? "text-blue-600" : "text-gray-400"
-                  }`}>
+                  <p
+                    className={`text-sm font-medium ${
+                      currentStep >= step.number ? 'text-blue-600' : 'text-gray-400'
+                    }`}
+                  >
                     Step {step.number}
                   </p>
-                  <p className={`text-xs ${
-                    currentStep >= step.number ? "text-gray-900" : "text-gray-400"
-                  }`}>
+                  <p
+                    className={`text-xs ${
+                      currentStep >= step.number ? 'text-gray-900' : 'text-gray-400'
+                    }`}
+                  >
                     {step.title}
                   </p>
                 </div>
                 {index < steps.length - 1 && (
-                  <div className={`w-16 h-0.5 mx-4 ${
-                    currentStep > step.number ? "bg-blue-600" : "bg-gray-300"
-                  }`} />
+                  <div
+                    className={`w-16 h-0.5 mx-4 ${
+                      currentStep > step.number ? 'bg-blue-600' : 'bg-gray-300'
+                    }`}
+                  />
                 )}
               </div>
             ))}
@@ -134,16 +154,18 @@ const OrganizationSetup = () => {
         <Card>
           <CardHeader>
             <CardTitle>
-              {currentStep === 1 && "Tell us about your organization"}
-              {currentStep === 2 && "Industry and company size"}
-              {currentStep === 3 && "Emergency contacts"}
-              {currentStep === 4 && "Setup complete!"}
+              {currentStep === 1 && 'Tell us about your organization'}
+              {currentStep === 2 && 'Industry and company size'}
+              {currentStep === 3 && 'Emergency contacts'}
+              {currentStep === 4 && 'Setup complete!'}
             </CardTitle>
             <CardDescription>
-              {currentStep === 1 && "We'll use this information to customize your emergency planning experience"}
-              {currentStep === 2 && "This helps us provide industry-specific emergency planning templates"}
-              {currentStep === 3 && "Key contacts for emergency situations"}
-              {currentStep === 4 && "Your organization is ready to start emergency planning"}
+              {currentStep === 1 &&
+                "We'll use this information to customize your emergency planning experience"}
+              {currentStep === 2 &&
+                'This helps us provide industry-specific emergency planning templates'}
+              {currentStep === 3 && 'Key contacts for emergency situations'}
+              {currentStep === 4 && 'Your organization is ready to start emergency planning'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -262,7 +284,7 @@ const OrganizationSetup = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {industries.map((industry) => (
+                              {industries.map(industry => (
                                 <SelectItem key={industry} value={industry}>
                                   {industry}
                                 </SelectItem>
@@ -286,7 +308,7 @@ const OrganizationSetup = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {companySizes.map((size) => (
+                              {companySizes.map(size => (
                                 <SelectItem key={size} value={size}>
                                   {size}
                                 </SelectItem>
@@ -338,7 +360,8 @@ const OrganizationSetup = () => {
                     <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold mb-2">Organization Setup Complete!</h3>
                     <p className="text-gray-600 mb-6">
-                      Your organization profile has been created. You can now start adding facilities and creating emergency plans.
+                      Your organization profile has been created. You can now start adding
+                      facilities and creating emergency plans.
                     </p>
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <h4 className="font-medium text-blue-900 mb-2">Next Steps:</h4>
@@ -362,7 +385,7 @@ const OrganizationSetup = () => {
                   >
                     Previous
                   </Button>
-                  
+
                   {currentStep < 4 ? (
                     <Button type="button" onClick={nextStep}>
                       Next

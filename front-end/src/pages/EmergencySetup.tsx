@@ -1,10 +1,9 @@
-
-import { useState } from "react";
-import Header from "@/components/Header";
-import DashboardCard from "@/components/DashboardCard";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, AlertTriangle, Users, UserCheck, Shield } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import Header from '@/components/Header';
+import DashboardCard from '@/components/DashboardCard';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileText, AlertTriangle, Users, UserCheck, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const EmergencySetup = () => {
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ const EmergencySetup = () => {
   };
 
   const getStatus = (stepId: string) => {
-    return completedSteps.includes(stepId) ? "complete" : "not-started";
+    return completedSteps.includes(stepId) ? 'complete' : 'not-started';
   };
 
   return (
@@ -27,8 +26,9 @@ const EmergencySetup = () => {
           <Card className="bg-blue-50 border-blue-200">
             <CardContent className="p-6">
               <p className="text-blue-800">
-                These components are considered the minimum core functionality for the platform, and no facility should be 
-                shipped without them. A condensed MVP could consist of only these elements.
+                These components are considered the minimum core functionality for the platform, and
+                no facility should be shipped without them. A condensed MVP could consist of only
+                these elements.
               </p>
             </CardContent>
           </Card>
@@ -41,10 +41,10 @@ const EmergencySetup = () => {
             icon={FileText}
             buttonText="Setup Emergency Plan"
             onButtonClick={() => {
-              markAsComplete("emergency-plan");
-              navigate("/emergency-plan");
+              markAsComplete('emergency-plan');
+              navigate('/emergency-plan');
             }}
-            status={getStatus("emergency-plan")}
+            status={getStatus('emergency-plan')}
           />
 
           <DashboardCard
@@ -53,10 +53,10 @@ const EmergencySetup = () => {
             icon={AlertTriangle}
             buttonText="Setup Risk Assessment"
             onButtonClick={() => {
-              markAsComplete("risk-assessment");
-              navigate("/risk-assessment");
+              markAsComplete('risk-assessment');
+              navigate('/risk-assessment');
             }}
-            status={getStatus("risk-assessment")}
+            status={getStatus('risk-assessment')}
           />
 
           <DashboardCard
@@ -65,10 +65,10 @@ const EmergencySetup = () => {
             icon={Shield}
             buttonText="Setup Emergency Procedures"
             onButtonClick={() => {
-              markAsComplete("emergency-procedures");
-              navigate("/emergency-procedures");
+              markAsComplete('emergency-procedures');
+              navigate('/emergency-procedures');
             }}
-            status={getStatus("emergency-procedures")}
+            status={getStatus('emergency-procedures')}
           />
         </div>
 
@@ -81,10 +81,10 @@ const EmergencySetup = () => {
               icon={Users}
               buttonText="Setup EPC"
               onButtonClick={() => {
-                markAsComplete("epc");
-                navigate("/epc-setup");
+                markAsComplete('epc');
+                navigate('/epc-setup');
               }}
-              status={getStatus("epc")}
+              status={getStatus('epc')}
             />
 
             <DashboardCard
@@ -93,10 +93,10 @@ const EmergencySetup = () => {
               icon={UserCheck}
               buttonText="Setup ECO"
               onButtonClick={() => {
-                markAsComplete("eco");
-                navigate("/eco-setup");
+                markAsComplete('eco');
+                navigate('/eco-setup');
               }}
-              status={getStatus("eco")}
+              status={getStatus('eco')}
             />
           </div>
         </div>
@@ -107,8 +107,8 @@ const EmergencySetup = () => {
           </CardHeader>
           <CardContent>
             <p className="text-yellow-700">
-              Automate these steps via guided template, digital form or Agentic AI to streamline the setup process 
-              and ensure consistency across all facilities.
+              Automate these steps via guided template, digital form or Agentic AI to streamline the
+              setup process and ensure consistency across all facilities.
             </p>
           </CardContent>
         </Card>

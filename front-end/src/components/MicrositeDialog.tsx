@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -6,15 +6,21 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Users } from "lucide-react";
-import { useApp } from "@/contexts/AppContext";
-import { useToast } from "@/hooks/use-toast";
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Users } from 'lucide-react';
+import { useApp } from '@/contexts/AppContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface MicrositeDialogProps {
   open: boolean;
@@ -24,43 +30,52 @@ interface MicrositeDialogProps {
   existingOccupants: string[];
 }
 
-const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccupants }: MicrositeDialogProps) => {
+const MicrositeDialog = ({
+  open,
+  onOpenChange,
+  onSave,
+  facilityId,
+  existingOccupants,
+}: MicrositeDialogProps) => {
   const { appData, addUser } = useApp();
   const { toast } = useToast();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     address: '',
     type: 'office',
     epcRepresentative: '',
-    occupants: [] as string[]
+    occupants: [] as string[],
   });
 
   const [newPersonData, setNewPersonData] = useState({
     name: '',
     email: '',
-    phone: ''
+    phone: '',
   });
 
   const facilityTypes = [
-    "Office",
-    "Warehouse",
-    "Manufacturing",
-    "Retail",
-    "Healthcare",
-    "Education",
-    "Industrial",
-    "Mixed Use",
-    "Other"
+    'Office',
+    'Warehouse',
+    'Manufacturing',
+    'Retail',
+    'Healthcare',
+    'Education',
+    'Industrial',
+    'Mixed Use',
+    'Other',
   ];
 
-  const epcRepresentatives = appData.users.filter(user => user.role === 'admin' || user.role === 'point-of-contact');
+  const epcRepresentatives = appData.users.filter(
+    user => user.role === 'admin' || user.role === 'point-of-contact',
+  );
   const { users } = appData;
 
-  const availableUsers = users.filter(user => 
-    user.role === 'occupant' && 
-    !existingOccupants.includes(user._id) &&
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const availableUsers = users.filter(
+    user =>
+      user.role === 'occupant' &&
+      !existingOccupants.includes(user._id) &&
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleOccupantToggle = (userId: string) => {
@@ -68,7 +83,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
       ...prev,
       occupants: prev.occupants.includes(userId)
         ? prev.occupants.filter(id => id !== userId)
-        : [...prev.occupants, userId]
+        : [...prev.occupants, userId],
     }));
   };
 
@@ -79,22 +94,22 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
       email: newPersonData.email,
       phone: newPersonData.phone,
       organizationId: appData.organization?._id || '',
-      facilityIds: []
+      facilityIds: [],
     });
 
     setFormData(prev => ({
       ...prev,
-      occupants: [...prev.occupants, newUser._id]
+      occupants: [...prev.occupants, newUser._id],
     }));
 
     setNewPersonData({
       name: '',
       email: '',
-      phone: ''
+      phone: '',
     });
 
     toast({
-      title: "New Occupant Created",
+      title: 'New Occupant Created',
       description: `${newPersonData.name} has been added as an occupant.`,
     });
   };
@@ -102,16 +117,16 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
   const handleSubmit = () => {
     if (!formData.name || !formData.address) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive"
+        title: 'Missing Information',
+        description: 'Please fill in all required fields.',
+        variant: 'destructive',
       });
       return;
     }
 
     onSave({
       ...formData,
-      id: Date.now().toString()
+      id: Date.now().toString(),
     });
     onOpenChange(false);
   };
@@ -125,9 +140,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Microsite</DialogTitle>
-          <DialogDescription>
-            Create a new microsite within this facility.
-          </DialogDescription>
+          <DialogDescription>Create a new microsite within this facility.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,7 +149,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
             <div className="space-y-2">
@@ -144,7 +157,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
               <Input
                 id="address"
                 value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                onChange={e => setFormData({ ...formData, address: e.target.value })}
               />
             </div>
           </div>
@@ -152,12 +165,15 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="type">Type</Label>
-              <Select value={formData.type} onValueChange={(value) => setFormData({ ...formData, type: value })}>
+              <Select
+                value={formData.type}
+                onValueChange={value => setFormData({ ...formData, type: value })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {facilityTypes.map((type) => (
+                  {facilityTypes.map(type => (
                     <SelectItem key={type} value={type.toLowerCase()}>
                       {type}
                     </SelectItem>
@@ -168,12 +184,15 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
 
             <div className="space-y-2">
               <Label htmlFor="epcRepresentative">EPC Representative</Label>
-              <Select value={formData.epcRepresentative} onValueChange={(value) => setFormData({ ...formData, epcRepresentative: value })}>
+              <Select
+                value={formData.epcRepresentative}
+                onValueChange={value => setFormData({ ...formData, epcRepresentative: value })}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a representative" />
                 </SelectTrigger>
                 <SelectContent>
-                  {epcRepresentatives.map((rep) => (
+                  {epcRepresentatives.map(rep => (
                     <SelectItem key={rep._id} value={rep._id}>
                       {rep.name} - {rep.email}
                     </SelectItem>
@@ -186,7 +205,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
 
         <div className="space-y-4">
           <h4 className="text-md font-semibold">Assign Existing Occupants</h4>
-          {availableUsers.map((user) => (
+          {availableUsers.map(user => (
             <div key={user._id} className="flex items-center space-x-2">
               <Checkbox
                 id={user._id}
@@ -199,7 +218,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
               </Label>
             </div>
           ))}
-          
+
           <h4 className="text-md font-semibold mt-4">Create New Occupant</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -207,7 +226,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
               <Input
                 id="new-name"
                 value={newPersonData.name}
-                onChange={(e) => setNewPersonData({ ...newPersonData, name: e.target.value })}
+                onChange={e => setNewPersonData({ ...newPersonData, name: e.target.value })}
               />
             </div>
             <div className="space-y-2">
@@ -216,7 +235,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
                 id="new-email"
                 type="email"
                 value={newPersonData.email}
-                onChange={(e) => setNewPersonData({ ...newPersonData, email: e.target.value })}
+                onChange={e => setNewPersonData({ ...newPersonData, email: e.target.value })}
               />
             </div>
             <div className="space-y-2">
@@ -225,7 +244,7 @@ const MicrositeDialog = ({ open, onOpenChange, onSave, facilityId, existingOccup
                 id="new-phone"
                 type="tel"
                 value={newPersonData.phone}
-                onChange={(e) => setNewPersonData({ ...newPersonData, phone: e.target.value })}
+                onChange={e => setNewPersonData({ ...newPersonData, phone: e.target.value })}
               />
             </div>
             <div>

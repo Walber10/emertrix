@@ -1,4 +1,4 @@
-import { Server } from "http";
+import { Server } from 'http';
 export function initSockets(server: Server) {
-  console.log("[Sockets] initSockets called (stub)");
-} 
+  console.log('[Sockets] initSockets called (stub)');
+}

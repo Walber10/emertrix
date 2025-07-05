@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IPayment extends Document {
   organizationId: Types.ObjectId;
@@ -19,7 +19,7 @@ const PaymentSchema = new Schema<IPayment>({
   currency: { type: String, required: true },
   status: { type: String, enum: ['pending', 'completed', 'failed'], required: true },
   stripeSessionId: { type: String },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
-export const Payment = mongoose.model<IPayment>("Payment", PaymentSchema); 
+export const Payment = mongoose.model<IPayment>('Payment', PaymentSchema);

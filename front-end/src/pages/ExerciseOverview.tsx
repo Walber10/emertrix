@@ -1,18 +1,24 @@
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, Shield, Target } from "lucide-react";
-import { format } from "date-fns";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Search, Shield, Target } from 'lucide-react';
+import { format } from 'date-fns';
 
 const ExerciseOverview = () => {
   const navigate = useNavigate();
   const { appData, getExercisesByFacility, getFacilityById } = useApp();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Redirect to account setup if no data
   if (!appData.isInitialized || appData.facilities.length === 0) {
@@ -21,21 +27,22 @@ const ExerciseOverview = () => {
   }
 
   // Get organization name from context
-  const organizationName = appData.organization?.name || "Your Organization";
+  const organizationName = appData.organization?.name || 'Your Organization';
 
   // Get all exercises across all facilities
-  const allExercises = appData.facilities.flatMap(facility => 
+  const allExercises = appData.facilities.flatMap(facility =>
     getExercisesByFacility(facility._id).map(exercise => ({
       ...exercise,
-      facility: facility
-    }))
+      facility: facility,
+    })),
   );
 
   // Filter exercises based on search
-  const filteredExercises = allExercises.filter(exercise =>
-    exercise.exerciseType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    exercise.coordinator.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    exercise.facility.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredExercises = allExercises.filter(
+    exercise =>
+      exercise.exerciseType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exercise.coordinator.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exercise.facility.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleViewExercise = (exerciseId: string, facilityId: string) => {
@@ -59,9 +66,7 @@ const ExerciseOverview = () => {
           <p className="text-gray-600">{organizationName}</p>
         </div>
         <div className="flex gap-3">
-          <Button onClick={handleCreateExercise}>
-            Create New Exercise
-          </Button>
+          <Button onClick={handleCreateExercise}>Create New Exercise</Button>
           <Button onClick={() => navigate('/exercises')} variant="outline">
             <Target className="h-4 w-4 mr-2" />
             Completed Exercises
@@ -80,13 +85,17 @@ const ExerciseOverview = () => {
               <Input
                 placeholder="Search"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">[Filter]</Button>
-              <Button variant="outline" size="sm">[Sort By]</Button>
+              <Button variant="outline" size="sm">
+                [Filter]
+              </Button>
+              <Button variant="outline" size="sm">
+                [Sort By]
+              </Button>
             </div>
           </div>
 
@@ -109,21 +118,20 @@ const ExerciseOverview = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredExercises.map((exercise) => (
+                filteredExercises.map(exercise => (
                   <TableRow key={exercise._id}>
                     <TableCell className="font-medium">{exercise.exerciseType}</TableCell>
                     <TableCell>{exercise.facility.name}</TableCell>
                     <TableCell>
-                      {exercise.location.includes(' - ') ? 
-                        exercise.location.split(' - ')[1] : 
-                        'N/A'
-                      }
+                      {exercise.location.includes(' - ')
+                        ? exercise.location.split(' - ')[1]
+                        : 'N/A'}
                     </TableCell>
-                    <TableCell>{format(exercise.proposedDate, "PPP")}</TableCell>
+                    <TableCell>{format(exercise.proposedDate, 'PPP')}</TableCell>
                     <TableCell>{exercise.coordinator}</TableCell>
                     <TableCell className="text-right">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => handleViewExercise(exercise._id, exercise.facility._id)}
                       >

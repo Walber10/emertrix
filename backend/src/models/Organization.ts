@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IOrganization extends Document {
   name: string;
@@ -23,11 +23,15 @@ const OrganizationSchema = new Schema<IOrganization>({
   natureOfWork: { type: String },
   abn: { type: String },
   organizationSize: { type: String, required: true },
-  selectedPlan: { type: String, enum: ['free', 'tier1', 'tier2', 'tier3', 'enterprise'], required: true },
+  selectedPlan: {
+    type: String,
+    enum: ['free', 'tier1', 'tier2', 'tier3', 'enterprise'],
+    required: true,
+  },
   maxFacilities: { type: Number, required: true },
   totalSeats: { type: Number, required: true },
   ownerId: { type: Schema.Types.ObjectId, ref: 'User' },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
-export const Organization = mongoose.model<IOrganization>("Organization", OrganizationSchema); 
+export const Organization = mongoose.model<IOrganization>('Organization', OrganizationSchema);

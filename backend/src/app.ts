@@ -1,10 +1,10 @@
-import express from "express";
-import "dotenv/config";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import { corsOptions } from "./configuration/corsOptions";
-import { router } from "./routes/router";
-import { onboardingRouter } from "./routes/onboarding";
+import express from 'express';
+import 'dotenv/config';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import { corsOptions } from './configuration/corsOptions';
+import { router } from './routes/router';
+import { onboardingRouter } from './routes/onboarding';
 
 export const app = express();
 

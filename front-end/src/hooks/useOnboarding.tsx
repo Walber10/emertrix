@@ -7,7 +7,7 @@ export interface OnboardingData {
     phoneNumber: string;
     industry: string;
     organizationSize: string;
-    selectedPlan: string;
+    selectedPlan: 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise';
     natureOfWork?: string;
     abn?: string;
     maxFacilities: number;
@@ -67,7 +67,7 @@ export interface OnboardingResponse {
 
 export function useTestBackend() {
   const { data, isLoading, error, isError } = useBackendHealth();
-  
+
   return {
     status: isLoading ? 'loading' : isError ? 'error' : 'success',
     message: error ? error.message : typeof data === 'string' ? data : JSON.stringify(data),
@@ -76,7 +76,7 @@ export function useTestBackend() {
 
 export function useOnboarding() {
   const mutation = useOnboardingMutation();
-  
+
   return {
     submitOnboarding: mutation.mutate,
     loading: mutation.isPending,

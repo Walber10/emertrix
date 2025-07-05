@@ -1,17 +1,17 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Building2, Users, MapPin, Plus, Settings, AlertTriangle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAppContext } from "@/contexts/AppContext";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Building2, Users, MapPin, Plus, Settings, AlertTriangle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '@/contexts/AppContext';
 
 const OrganizationDashboard = () => {
   const navigate = useNavigate();
-  const { appData, canCreateMoreFacilities, getTotalSeats, getUsedSeats, getMaxFacilities } = useAppContext();
+  const { appData, canCreateMoreFacilities, getTotalSeats, getUsedSeats, getMaxFacilities } =
+    useAppContext();
 
   const handleCreateFacility = () => {
-    navigate("/create-facility");
+    navigate('/create-facility');
   };
 
   const handleViewFacility = (facilityId: string) => {
@@ -19,7 +19,7 @@ const OrganizationDashboard = () => {
   };
 
   const handleManagePeople = () => {
-    navigate("/people");
+    navigate('/people');
   };
 
   return (
@@ -34,7 +34,7 @@ const OrganizationDashboard = () => {
                 Welcome to {appData.organization?.name || 'your organization'}
               </p>
             </div>
-            <Button onClick={() => navigate("/settings")} variant="outline" size="sm">
+            <Button onClick={() => navigate('/settings')} variant="outline" size="sm">
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
@@ -104,7 +104,7 @@ const OrganizationDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button 
+              <Button
                 onClick={handleCreateFacility}
                 disabled={!canCreateMoreFacilities()}
                 className="h-20 flex flex-col items-center justify-center"
@@ -112,7 +112,7 @@ const OrganizationDashboard = () => {
                 <Plus className="h-6 w-6 mb-2" />
                 Add New Facility
               </Button>
-              <Button 
+              <Button
                 onClick={handleManagePeople}
                 variant="outline"
                 className="h-20 flex flex-col items-center justify-center"
@@ -120,8 +120,8 @@ const OrganizationDashboard = () => {
                 <Users className="h-6 w-6 mb-2" />
                 Manage People
               </Button>
-              <Button 
-                onClick={() => navigate("/training")}
+              <Button
+                onClick={() => navigate('/training')}
                 variant="outline"
                 className="h-20 flex flex-col items-center justify-center"
               >
@@ -159,8 +159,11 @@ const OrganizationDashboard = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {appData.facilities.map((facility) => (
-                  <Card key={facility._id} className="cursor-pointer hover:shadow-md transition-shadow">
+                {appData.facilities.map(facility => (
+                  <Card
+                    key={facility._id}
+                    className="cursor-pointer hover:shadow-md transition-shadow"
+                  >
                     <CardHeader>
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">{facility.name}</CardTitle>
@@ -178,7 +181,7 @@ const OrganizationDashboard = () => {
                           {facility.assignedOccupantIds.length} occupants
                         </div>
                       </div>
-                      <Button 
+                      <Button
                         onClick={() => handleViewFacility(facility._id)}
                         className="w-full mt-4"
                         variant="outline"

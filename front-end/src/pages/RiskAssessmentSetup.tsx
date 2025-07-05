@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle, Plus, Building2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle, Plus, Building2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
 
 const RiskAssessmentSetup = () => {
   const navigate = useNavigate();
@@ -14,7 +14,9 @@ const RiskAssessmentSetup = () => {
       <div className="p-6 space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Risk Assessment Setup</h1>
-          <p className="text-gray-600 mt-2">Identify and evaluate potential hazards at your facility</p>
+          <p className="text-gray-600 mt-2">
+            Identify and evaluate potential hazards at your facility
+          </p>
         </div>
 
         <Card className="text-center py-12">
@@ -24,7 +26,10 @@ const RiskAssessmentSetup = () => {
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
               You need to create a facility first before conducting risk assessments.
             </p>
-            <Button onClick={() => navigate("/facility-setup")} className="flex items-center gap-2 mx-auto">
+            <Button
+              onClick={() => navigate('/facility-setup')}
+              className="flex items-center gap-2 mx-auto"
+            >
               <Plus className="h-4 w-4" />
               Create Your First Facility
             </Button>
@@ -38,7 +43,9 @@ const RiskAssessmentSetup = () => {
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Risk Assessment Setup</h1>
-        <p className="text-gray-600 mt-2">Identify and evaluate potential hazards at your facility</p>
+        <p className="text-gray-600 mt-2">
+          Identify and evaluate potential hazards at your facility
+        </p>
       </div>
 
       <Card>

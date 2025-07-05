@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 /**
  * @function connectToDatabase
@@ -7,14 +7,14 @@ import mongoose from "mongoose";
  */
 export const connectToDatabase = async () => {
   if (!process.env.MONG_URI) {
-    console.error("Please specify the MongoDB URI in the .env file.");
+    console.error('Please specify the MongoDB URI in the .env file.');
     process.exit(1);
   }
 
   try {
     await mongoose.connect(process.env.MONG_URI);
-    console.log("Connected to the database 🧰");
+    console.log('Connected to the database 🧰');
   } catch (err) {
-    console.error("Error connecting to the database: ", err);
+    console.error('Error connecting to the database: ', err);
   }
-}; 
+};

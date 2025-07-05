@@ -1,5 +1,4 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ComplianceStatusCardProps {
   compliancePercentage: number;
@@ -31,12 +30,12 @@ const ComplianceStatusCard = ({ compliancePercentage }: ComplianceStatusCardProp
       </CardHeader>
       <CardContent>
         <div className="text-center">
-          <div className={`w-16 h-16 mx-auto mb-2 rounded-full flex items-center justify-center text-white font-bold text-lg ${getStatusColor()}`}>
+          <div
+            className={`w-16 h-16 mx-auto mb-2 rounded-full flex items-center justify-center text-white font-bold text-lg ${getStatusColor()}`}
+          >
             {compliancePercentage}%
           </div>
-          <p className={`font-medium ${getTextColor()}`}>
-            {getStatusText()}
-          </p>
+          <p className={`font-medium ${getTextColor()}`}>{getStatusText()}</p>
         </div>
       </CardContent>
     </Card>

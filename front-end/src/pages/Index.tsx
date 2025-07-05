@@ -1,8 +1,7 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Building2, CheckCircle, Users, Shield } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Building2, CheckCircle, Users, Shield } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -15,16 +14,14 @@ const Index = () => {
           <div className="flex items-center justify-center mb-6">
             <Building2 className="h-16 w-16 text-blue-600" />
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Emergency Planning System
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Emergency Planning System</h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Comprehensive emergency management solution for your facilities. 
-            Create compliant emergency plans, manage risks, and ensure safety.
+            Comprehensive emergency management solution for your facilities. Create compliant
+            emergency plans, manage risks, and ensure safety.
           </p>
-          <Button 
-            size="lg" 
-            onClick={() => navigate("/plan-selection")}
+          <Button
+            size="lg"
+            onClick={() => navigate('/plan-selection')}
             className="text-lg px-8 py-4"
           >
             Get Started
@@ -42,7 +39,7 @@ const Index = () => {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card className="text-center">
             <CardContent className="p-6">
               <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
@@ -52,7 +49,7 @@ const Index = () => {
               </p>
             </CardContent>
           </Card>
-          
+
           <Card className="text-center">
             <CardContent className="p-6">
               <CheckCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
@@ -94,7 +91,9 @@ const Index = () => {
                 4
               </div>
               <h4 className="font-medium mb-2">Manage Safety</h4>
-              <p className="text-sm text-gray-600">Create plans, train teams, maintain compliance</p>
+              <p className="text-sm text-gray-600">
+                Create plans, train teams, maintain compliance
+              </p>
             </div>
           </div>
         </div>

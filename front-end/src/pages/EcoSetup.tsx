@@ -1,12 +1,11 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { UserCheck, Plus, Building2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { UserCheck, Plus, Building2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const EcoSetup = () => {
   const navigate = useNavigate();
-  
+
   // Simulate no facility created yet - in real app this would come from state/API
   const hasFacility = false;
 
@@ -23,9 +22,13 @@ const EcoSetup = () => {
             <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No Facility Created</h3>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
-              You need to create a facility first before setting up the Emergency Control Organization.
+              You need to create a facility first before setting up the Emergency Control
+              Organization.
             </p>
-            <Button onClick={() => navigate("/facility-setup")} className="flex items-center gap-2 mx-auto">
+            <Button
+              onClick={() => navigate('/facility-setup')}
+              className="flex items-center gap-2 mx-auto"
+            >
               <Plus className="h-4 w-4" />
               Create Your First Facility
             </Button>
@@ -49,14 +52,17 @@ const EcoSetup = () => {
             Emergency Control Organization (ECO)
           </CardTitle>
           <CardDescription>
-            The wardens assigned to manage emergency response during an incident. Every facility must have an ECO, structured according to Australian Standards.
+            The wardens assigned to manage emergency response during an incident. Every facility
+            must have an ECO, structured according to Australian Standards.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
             <UserCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No ECO Structure Created</h3>
-            <p className="text-gray-600 mb-4">Start by setting up your Emergency Control Organization structure</p>
+            <p className="text-gray-600 mb-4">
+              Start by setting up your Emergency Control Organization structure
+            </p>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
               Setup ECO Structure

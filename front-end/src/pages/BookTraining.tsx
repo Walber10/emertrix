@@ -1,15 +1,20 @@
-
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Users, Calendar } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ArrowLeft, Users, Calendar } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const BookTraining = () => {
   const navigate = useNavigate();
@@ -26,12 +31,13 @@ const BookTraining = () => {
   const [formData, setFormData] = useState({
     courseType: '',
     organiserName: '',
-    participants: [] as string[]
+    participants: [] as string[],
   });
 
   const facility = getFacilityById(facilityId || '');
   const availableUsers = getUsersByRole('occupant').concat(getUsersByRole('point-of-contact'));
-  const facilityOccupants = facility?.assignedOccupantIds.map(id => getUserById(id)).filter(Boolean) || [];
+  const facilityOccupants =
+    facility?.assignedOccupantIds.map(id => getUserById(id)).filter(Boolean) || [];
 
   const courseTypes = [
     'Fire Safety Training',
@@ -39,7 +45,7 @@ const BookTraining = () => {
     'Emergency Evacuation Procedures',
     'Workplace Health & Safety',
     'Manual Handling',
-    'Risk Assessment Training'
+    'Risk Assessment Training',
   ];
 
   const handleParticipantToggle = (userId: string) => {
@@ -47,18 +53,18 @@ const BookTraining = () => {
       ...prev,
       participants: prev.participants.includes(userId)
         ? prev.participants.filter(id => id !== userId)
-        : [...prev.participants, userId]
+        : [...prev.participants, userId],
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.courseType || !formData.organiserName || formData.participants.length === 0) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields and select at least one participant.",
-        variant: "destructive"
+        title: 'Missing Information',
+        description: 'Please fill in all required fields and select at least one participant.',
+        variant: 'destructive',
       });
       return;
     }
@@ -70,20 +76,20 @@ const BookTraining = () => {
         participants: formData.participants,
         status: 'scheduled',
         facilityId: facilityId || '',
-        organizationId: appData.organization?._id || ''
+        organizationId: appData.organization?._id || '',
       });
 
       toast({
-        title: "Training Booked Successfully",
-        description: "The training course has been scheduled and participants will be notified.",
+        title: 'Training Booked Successfully',
+        description: 'The training course has been scheduled and participants will be notified.',
       });
 
       navigate(`/facility/${facilityId}`);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to book training course. Please try again.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to book training course. Please try again.',
+        variant: 'destructive',
       });
     }
   };
@@ -118,20 +124,21 @@ const BookTraining = () => {
             <Calendar className="h-5 w-5" />
             Book Training
           </CardTitle>
-          <p className="text-sm text-gray-600">
-            Schedule a training course for {facility.name}
-          </p>
+          <p className="text-sm text-gray-600">Schedule a training course for {facility.name}</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="courseType">Course Type *</Label>
-              <Select value={formData.courseType} onValueChange={(value) => setFormData(prev => ({ ...prev, courseType: value }))}>
+              <Select
+                value={formData.courseType}
+                onValueChange={value => setFormData(prev => ({ ...prev, courseType: value }))}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select from available training courses" />
                 </SelectTrigger>
                 <SelectContent>
-                  {courseTypes.map((course) => (
+                  {courseTypes.map(course => (
                     <SelectItem key={course} value={course}>
                       {course}
                     </SelectItem>
@@ -142,12 +149,15 @@ const BookTraining = () => {
 
             <div className="space-y-2">
               <Label htmlFor="organiserName">Organiser Name *</Label>
-              <Select value={formData.organiserName} onValueChange={(value) => setFormData(prev => ({ ...prev, organiserName: value }))}>
+              <Select
+                value={formData.organiserName}
+                onValueChange={value => setFormData(prev => ({ ...prev, organiserName: value }))}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select from existing users" />
                 </SelectTrigger>
                 <SelectContent>
-                  {availableUsers.map((user) => (
+                  {availableUsers.map(user => (
                     <SelectItem key={user._id} value={user.name}>
                       {user.name} - {user.role}
                     </SelectItem>
@@ -160,7 +170,7 @@ const BookTraining = () => {
               <Label>Participants * (Select from existing occupants)</Label>
               <Card className="p-4">
                 <div className="space-y-3 max-h-60 overflow-y-auto">
-                  {facilityOccupants.map((user) => (
+                  {facilityOccupants.map(user => (
                     <div key={user._id} className="flex items-center space-x-2">
                       <Checkbox
                         id={user._id}
@@ -189,9 +199,9 @@ const BookTraining = () => {
               <Button type="submit" className="flex-1">
                 Submit Training Request
               </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => navigate(`/facility/${facilityId}`)}
               >
                 Cancel
@@ -202,8 +212,9 @@ const BookTraining = () => {
           <Card className="mt-6 bg-blue-50 border-blue-200">
             <CardContent className="p-4">
               <p className="text-sm text-blue-800">
-                <strong>Note:</strong> Submitting this form will trigger a notification to Ryan, who will manually enrol the selected participants. 
-                The course will appear as "in progress" in your facility dashboard once processing begins.
+                <strong>Note:</strong> Submitting this form will trigger a notification to Ryan, who
+                will manually enrol the selected participants. The course will appear as "in
+                progress" in your facility dashboard once processing begins.
               </p>
             </CardContent>
           </Card>

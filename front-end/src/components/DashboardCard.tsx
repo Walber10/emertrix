@@ -1,7 +1,6 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { LucideIcon } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { LucideIcon } from 'lucide-react';
 
 interface DashboardCardProps {
   title: string;
@@ -9,30 +8,36 @@ interface DashboardCardProps {
   icon: LucideIcon;
   buttonText: string;
   onButtonClick: () => void;
-  status?: "complete" | "incomplete" | "not-started";
+  status?: 'complete' | 'incomplete' | 'not-started';
 }
 
-const DashboardCard = ({ 
-  title, 
-  description, 
-  icon: Icon, 
-  buttonText, 
+const DashboardCard = ({
+  title,
+  description,
+  icon: Icon,
+  buttonText,
   onButtonClick,
-  status = "not-started" 
+  status = 'not-started',
 }: DashboardCardProps) => {
   const getStatusColor = () => {
     switch (status) {
-      case "complete": return "bg-green-50 border-green-200";
-      case "incomplete": return "bg-yellow-50 border-yellow-200";
-      default: return "bg-gray-50 border-gray-200";
+      case 'complete':
+        return 'bg-green-50 border-green-200';
+      case 'incomplete':
+        return 'bg-yellow-50 border-yellow-200';
+      default:
+        return 'bg-gray-50 border-gray-200';
     }
   };
 
   const getStatusDot = () => {
     switch (status) {
-      case "complete": return "bg-green-500";
-      case "incomplete": return "bg-yellow-500";
-      default: return "bg-gray-400";
+      case 'complete':
+        return 'bg-green-500';
+      case 'incomplete':
+        return 'bg-yellow-500';
+      default:
+        return 'bg-gray-400';
     }
   };
 
@@ -50,9 +55,7 @@ const DashboardCard = ({
           </div>
           <div className={`w-3 h-3 rounded-full ${getStatusDot()}`} />
         </div>
-        <CardDescription className="text-sm text-gray-600">
-          {description}
-        </CardDescription>
+        <CardDescription className="text-sm text-gray-600">{description}</CardDescription>
       </CardHeader>
       <CardContent>
         <Button onClick={onButtonClick} className="w-full">

@@ -1,17 +1,34 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building2, MapPin, Phone, Users, Plus, X, Map, UserPlus, AlertTriangle, Crown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { useApp } from "@/contexts/AppContext";
-import { useOnboardingState } from "@/hooks/useOnboardingState";
-import { EmertrixLogo } from "@/components/EmertrixLogo";
-import MicrositeDialog from "@/components/MicrositeDialog";
-import { AddPersonModal } from "@/components/AddPersonModal";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Building2,
+  MapPin,
+  Phone,
+  Users,
+  Plus,
+  X,
+  Map,
+  UserPlus,
+  AlertTriangle,
+  Crown,
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { useApp } from '@/contexts/AppContext';
+import { useOnboardingState } from '@/hooks/useOnboardingState';
+import { EmertrixLogo } from '@/components/EmertrixLogo';
+import MicrositeDialog from '@/components/MicrositeDialog';
+import { AddPersonModal } from '@/components/AddPersonModal';
 
 interface Microsite {
   id: string;
@@ -39,34 +56,36 @@ interface FacilityFormData {
 const FacilitySetup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { 
-    appData, 
-    addFacility, 
-    addUser, 
-    canCreateMoreFacilities, 
-    getMaxFacilities, 
+  const {
+    appData,
+    addFacility,
+    addUser,
+    canCreateMoreFacilities,
+    getMaxFacilities,
     getAvailableSeats,
     getTotalSeats,
     getUsedSeats,
     canCreateNewOccupant,
-    getUserById
+    getUserById,
   } = useApp();
   const { onboarding, getSelectedPlanLimits } = useOnboardingState();
   const { users } = appData;
-  
-  const [facilities, setFacilities] = useState<FacilityFormData[]>([{
-    id: 1,
-    facilityName: "",
-    facilityAddress: "",
-    city: "",
-    state: "",
-    postcode: "",
-    facilityPhoneNumber: "",
-    facilityType: "",
-    facilityPointOfContact: "",
-    assignOccupants: [],
-    microsites: []
-  }]);
+
+  const [facilities, setFacilities] = useState<FacilityFormData[]>([
+    {
+      id: 1,
+      facilityName: '',
+      facilityAddress: '',
+      city: '',
+      state: '',
+      postcode: '',
+      facilityPhoneNumber: '',
+      facilityType: '',
+      facilityPointOfContact: '',
+      assignOccupants: [],
+      microsites: [],
+    },
+  ]);
 
   const [micrositeDialogOpen, setMicrositeDialogOpen] = useState(false);
   const [currentFacilityId, setCurrentFacilityId] = useState<number | null>(null);
@@ -74,19 +93,19 @@ const FacilitySetup = () => {
   const [currentFacilityForPerson, setCurrentFacilityForPerson] = useState<number | null>(null);
 
   const facilityTypes = [
-    "Office Building",
-    "Warehouse",
-    "Manufacturing Plant", 
-    "Retail Store",
-    "Healthcare Facility",
-    "Educational Institution",
-    "Industrial Facility",
-    "Mixed Use Building",
-    "Other"
+    'Office Building',
+    'Warehouse',
+    'Manufacturing Plant',
+    'Retail Store',
+    'Healthcare Facility',
+    'Educational Institution',
+    'Industrial Facility',
+    'Mixed Use Building',
+    'Other',
   ];
 
-  const allUsers = users.filter(user => 
-    user.role === 'admin' || user.role === 'point-of-contact' || user.role === 'occupant'
+  const allUsers = users.filter(
+    user => user.role === 'admin' || user.role === 'point-of-contact' || user.role === 'occupant',
   );
 
   const planLimits = getSelectedPlanLimits();
@@ -96,19 +115,22 @@ const FacilitySetup = () => {
   const addFacilityForm = () => {
     if (canAddMore) {
       const newId = facilities.length + 1;
-      setFacilities([...facilities, {
-        id: newId,
-        facilityName: "",
-        facilityAddress: "",
-        city: "",
-        state: "",
-        postcode: "",
-        facilityPhoneNumber: "",
-        facilityType: "",
-        facilityPointOfContact: "",
-        assignOccupants: [],
-        microsites: []
-      }]);
+      setFacilities([
+        ...facilities,
+        {
+          id: newId,
+          facilityName: '',
+          facilityAddress: '',
+          city: '',
+          state: '',
+          postcode: '',
+          facilityPhoneNumber: '',
+          facilityType: '',
+          facilityPointOfContact: '',
+          assignOccupants: [],
+          microsites: [],
+        },
+      ]);
     }
   };
 
@@ -119,9 +141,7 @@ const FacilitySetup = () => {
   };
 
   const updateFacility = (id: number, field: string, value: string) => {
-    setFacilities(facilities.map(f => 
-      f.id === id ? { ...f, [field]: value } : f
-    ));
+    setFacilities(facilities.map(f => (f.id === id ? { ...f, [field]: value } : f)));
   };
 
   const openMicrositeDialog = (facilityId: number) => {
@@ -131,49 +151,61 @@ const FacilitySetup = () => {
 
   const handleMicrositeSave = (microsite: Microsite) => {
     if (currentFacilityId) {
-      setFacilities(facilities.map(f => 
-        f.id === currentFacilityId ? { 
-          ...f, 
-          microsites: [...f.microsites, microsite] 
-        } : f
-      ));
+      setFacilities(
+        facilities.map(f =>
+          f.id === currentFacilityId
+            ? {
+                ...f,
+                microsites: [...f.microsites, microsite],
+              }
+            : f,
+        ),
+      );
     }
   };
 
   const removeMicrosite = (facilityId: number, micrositeId: string) => {
-    setFacilities(facilities.map(f => 
-      f.id === facilityId ? { 
-        ...f, 
-        microsites: f.microsites.filter(m => m.id !== micrositeId) 
-      } : f
-    ));
+    setFacilities(
+      facilities.map(f =>
+        f.id === facilityId
+          ? {
+              ...f,
+              microsites: f.microsites.filter(m => m.id !== micrositeId),
+            }
+          : f,
+      ),
+    );
   };
 
   const addExistingOccupant = (facilityId: number, userId: string) => {
     const facility = facilities.find(f => f.id === facilityId);
     if (facility && facility.assignOccupants.includes(userId)) {
       toast({
-        title: "User Already Assigned",
-        description: "This user is already assigned to this facility",
-        variant: "destructive"
+        title: 'User Already Assigned',
+        description: 'This user is already assigned to this facility',
+        variant: 'destructive',
       });
       return;
     }
 
-    setFacilities(facilities.map(f => 
-      f.id === facilityId ? { 
-        ...f, 
-        assignOccupants: [...f.assignOccupants, userId] 
-      } : f
-    ));
+    setFacilities(
+      facilities.map(f =>
+        f.id === facilityId
+          ? {
+              ...f,
+              assignOccupants: [...f.assignOccupants, userId],
+            }
+          : f,
+      ),
+    );
   };
 
   const openAddPersonModal = (facilityId: number) => {
     if (!canCreateNewOccupant()) {
       toast({
-        title: "No Available Seats",
+        title: 'No Available Seats',
         description: `You have used all ${getTotalSeats()} available seats. Please upgrade your plan to add more occupants.`,
-        variant: "destructive"
+        variant: 'destructive',
       });
       return;
     }
@@ -190,47 +222,60 @@ const FacilitySetup = () => {
     console.log('Person added callback:', userId, currentFacilityForPerson);
     if (currentFacilityForPerson) {
       // Add the user to the local facility state
-      setFacilities(facilities.map(f => 
-        f.id === currentFacilityForPerson ? { 
-          ...f, 
-          assignOccupants: [...f.assignOccupants, userId] 
-        } : f
-      ));
-      
+      setFacilities(
+        facilities.map(f =>
+          f.id === currentFacilityForPerson
+            ? {
+                ...f,
+                assignOccupants: [...f.assignOccupants, userId],
+              }
+            : f,
+        ),
+      );
+
       // Show success message
       toast({
-        title: "Success",
-        description: "Occupant has been added to the facility successfully"
+        title: 'Success',
+        description: 'Occupant has been added to the facility successfully',
       });
     }
   };
 
   const removeOccupant = (facilityId: number, userId: string) => {
-    setFacilities(facilities.map(f => 
-      f.id === facilityId ? { 
-        ...f, 
-        assignOccupants: f.assignOccupants.filter(id => id !== userId),
-        facilityPointOfContact: f.facilityPointOfContact === userId ? "" : f.facilityPointOfContact
-      } : f
-    ));
+    setFacilities(
+      facilities.map(f =>
+        f.id === facilityId
+          ? {
+              ...f,
+              assignOccupants: f.assignOccupants.filter(id => id !== userId),
+              facilityPointOfContact:
+                f.facilityPointOfContact === userId ? '' : f.facilityPointOfContact,
+            }
+          : f,
+      ),
+    );
   };
 
   const setAsPointOfContact = (facilityId: number, userId: string) => {
-    setFacilities(facilities.map(f => 
-      f.id === facilityId ? { 
-        ...f, 
-        facilityPointOfContact: userId
-      } : f
-    ));
+    setFacilities(
+      facilities.map(f =>
+        f.id === facilityId
+          ? {
+              ...f,
+              facilityPointOfContact: userId,
+            }
+          : f,
+      ),
+    );
   };
 
   const validateFacilities = () => {
     for (const facility of facilities) {
       if (!facility.facilityName || !facility.facilityAddress || !facility.facilityType) {
         toast({
-          title: "Missing Information",
+          title: 'Missing Information',
           description: `Please fill in all required fields for ${facility.facilityName || 'facility'}`,
-          variant: "destructive"
+          variant: 'destructive',
         });
         return false;
       }
@@ -238,9 +283,9 @@ const FacilitySetup = () => {
       const incompleteMicrosites = facility.microsites.filter(m => !m.name || !m.address);
       if (incompleteMicrosites.length > 0) {
         toast({
-          title: "Incomplete Microsites",
+          title: 'Incomplete Microsites',
           description: `Please complete all microsite details for ${facility.facilityName} or remove incomplete ones`,
-          variant: "destructive"
+          variant: 'destructive',
         });
         return false;
       }
@@ -250,7 +295,7 @@ const FacilitySetup = () => {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateFacilities()) {
       return;
     }
@@ -268,7 +313,7 @@ const FacilitySetup = () => {
         pointOfContactId: facility.facilityPointOfContact,
         assignedOccupantIds: facility.assignOccupants,
         microsites: facility.microsites,
-        organizationId: appData.organization?._id || ''
+        organizationId: appData.organization?._id || '',
       };
 
       addFacility(facilityData);
@@ -277,19 +322,19 @@ const FacilitySetup = () => {
     const totalMicrosites = facilities.reduce((sum, f) => sum + f.microsites.length, 0);
     const facilityText = facilities.length === 1 ? 'facility' : 'facilities';
     const micrositeText = totalMicrosites === 1 ? 'microsite' : 'microsites';
-    
+
     toast({
-      title: "Facilities Saved Successfully",
+      title: 'Facilities Saved Successfully',
       description: `${facilities.length} ${facilityText} saved${totalMicrosites > 0 ? ` with ${totalMicrosites} total ${micrositeText}` : ''}.`,
     });
 
     // Navigate to organization dashboard
-    navigate("/organization-dashboard");
+    navigate('/organization-dashboard');
   };
 
   const handleSkipForNow = () => {
     // Navigate directly to organization dashboard without saving
-    navigate("/organization-dashboard");
+    navigate('/organization-dashboard');
   };
 
   return (
@@ -303,16 +348,15 @@ const FacilitySetup = () => {
           <p className="text-gray-600 text-lg">Set up your organization's facility</p>
           <div className="flex justify-center items-center gap-6 mt-4">
             <p className="text-sm text-emertrix-orange font-medium">
-              Plan: {onboarding.plan?.tier?.toUpperCase()} - Facilities: {facilities.length}/{maxFacilities}
+              Plan: {onboarding.plan?.tier?.toUpperCase()} - Facilities: {facilities.length}/
+              {maxFacilities}
             </p>
             <div className="flex items-center gap-2 text-sm">
               <Users className="h-4 w-4 text-blue-600" />
               <span className="text-blue-600 font-medium">
                 Seats: {getUsedSeats()}/{planLimits.seats} used
               </span>
-              {getAvailableSeats() <= 2 && (
-                <AlertTriangle className="h-4 w-4 text-orange-500" />
-              )}
+              {getAvailableSeats() <= 2 && <AlertTriangle className="h-4 w-4 text-orange-500" />}
             </div>
           </div>
         </div>
@@ -320,7 +364,10 @@ const FacilitySetup = () => {
         <form onSubmit={handleSave} className="space-y-6">
           <div className="space-y-6">
             {facilities.map((facility, index) => (
-              <Card key={facility.id} className="bg-white shadow-sm border-l-4 border-l-emertrix-orange">
+              <Card
+                key={facility.id}
+                className="bg-white shadow-sm border-l-4 border-l-emertrix-orange"
+              >
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <div>
@@ -328,7 +375,9 @@ const FacilitySetup = () => {
                         <Building2 className="h-5 w-5 text-emertrix-orange" />
                         Facility Details {facilities.length > 1 ? `(${index + 1})` : ''}
                       </CardTitle>
-                      <CardDescription className="text-base">Enter details for your facility</CardDescription>
+                      <CardDescription className="text-base">
+                        Enter details for your facility
+                      </CardDescription>
                     </div>
                     {facilities.length > 1 && (
                       <Button
@@ -346,21 +395,27 @@ const FacilitySetup = () => {
                   {/* Basic facility information */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor={`facilityName-${facility.id}`} className="text-left block flex items-center space-x-2">
+                      <Label
+                        htmlFor={`facilityName-${facility.id}`}
+                        className="text-left block flex items-center space-x-2"
+                      >
                         <Building2 className="h-4 w-4 text-emertrix-orange" />
                         <span>Name *</span>
                       </Label>
                       <Input
                         id={`facilityName-${facility.id}`}
                         value={facility.facilityName}
-                        onChange={(e) => updateFacility(facility.id, "facilityName", e.target.value)}
+                        onChange={e => updateFacility(facility.id, 'facilityName', e.target.value)}
                         placeholder="Enter facility name"
                         required
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor={`facilityPhoneNumber-${facility.id}`} className="text-left block flex items-center space-x-2">
+                      <Label
+                        htmlFor={`facilityPhoneNumber-${facility.id}`}
+                        className="text-left block flex items-center space-x-2"
+                      >
                         <Phone className="h-4 w-4 text-emertrix-orange" />
                         <span>Phone Number</span>
                       </Label>
@@ -368,64 +423,79 @@ const FacilitySetup = () => {
                         id={`facilityPhoneNumber-${facility.id}`}
                         type="tel"
                         value={facility.facilityPhoneNumber}
-                        onChange={(e) => updateFacility(facility.id, "facilityPhoneNumber", e.target.value)}
+                        onChange={e =>
+                          updateFacility(facility.id, 'facilityPhoneNumber', e.target.value)
+                        }
                         placeholder="Enter phone number"
                       />
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor={`facilityAddress-${facility.id}`} className="text-left block flex items-center space-x-2">
+                      <Label
+                        htmlFor={`facilityAddress-${facility.id}`}
+                        className="text-left block flex items-center space-x-2"
+                      >
                         <MapPin className="h-4 w-4 text-emertrix-orange" />
                         <span>Address *</span>
                       </Label>
                       <Input
                         id={`facilityAddress-${facility.id}`}
                         value={facility.facilityAddress}
-                        onChange={(e) => updateFacility(facility.id, "facilityAddress", e.target.value)}
+                        onChange={e =>
+                          updateFacility(facility.id, 'facilityAddress', e.target.value)
+                        }
                         placeholder="Enter facility address"
                         required
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor={`city-${facility.id}`} className="text-left block">City</Label>
+                      <Label htmlFor={`city-${facility.id}`} className="text-left block">
+                        City
+                      </Label>
                       <Input
                         id={`city-${facility.id}`}
                         value={facility.city}
-                        onChange={(e) => updateFacility(facility.id, "city", e.target.value)}
+                        onChange={e => updateFacility(facility.id, 'city', e.target.value)}
                         placeholder="City"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`state-${facility.id}`} className="text-left block">State</Label>
+                      <Label htmlFor={`state-${facility.id}`} className="text-left block">
+                        State
+                      </Label>
                       <Input
                         id={`state-${facility.id}`}
                         value={facility.state}
-                        onChange={(e) => updateFacility(facility.id, "state", e.target.value)}
+                        onChange={e => updateFacility(facility.id, 'state', e.target.value)}
                         placeholder="State"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor={`postcode-${facility.id}`} className="text-left block">Postcode</Label>
+                      <Label htmlFor={`postcode-${facility.id}`} className="text-left block">
+                        Postcode
+                      </Label>
                       <Input
                         id={`postcode-${facility.id}`}
                         value={facility.postcode}
-                        onChange={(e) => updateFacility(facility.id, "postcode", e.target.value)}
+                        onChange={e => updateFacility(facility.id, 'postcode', e.target.value)}
                         placeholder="Postcode"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor={`facilityType-${facility.id}`} className="text-left block">Type *</Label>
-                      <Select 
+                      <Label htmlFor={`facilityType-${facility.id}`} className="text-left block">
+                        Type *
+                      </Label>
+                      <Select
                         value={facility.facilityType}
-                        onValueChange={(value) => updateFacility(facility.id, "facilityType", value)}
+                        onValueChange={value => updateFacility(facility.id, 'facilityType', value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select facility type" />
                         </SelectTrigger>
                         <SelectContent>
-                          {facilityTypes.map((type) => (
+                          {facilityTypes.map(type => (
                             <SelectItem key={type} value={type.toLowerCase().replace(/\s+/g, '-')}>
                               {type}
                             </SelectItem>
@@ -444,12 +514,13 @@ const FacilitySetup = () => {
                           Microsites (Optional)
                         </h4>
                         <p className="text-sm text-gray-600 mt-1">
-                          Add sub-sites within this facility with their own occupants and EPC representatives
+                          Add sub-sites within this facility with their own occupants and EPC
+                          representatives
                         </p>
                       </div>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
+                      <Button
+                        type="button"
+                        variant="outline"
                         size="sm"
                         onClick={() => openMicrositeDialog(facility.id)}
                         className="border-emertrix-orange text-emertrix-orange hover:bg-emertrix-orange hover:text-white"
@@ -461,7 +532,7 @@ const FacilitySetup = () => {
 
                     {facility.microsites.length > 0 && (
                       <div className="space-y-3">
-                        {facility.microsites.map((microsite) => (
+                        {facility.microsites.map(microsite => (
                           <Card key={microsite.id} className="bg-gray-50">
                             <CardContent className="pt-4">
                               <div className="flex justify-between items-start mb-3">
@@ -469,7 +540,10 @@ const FacilitySetup = () => {
                                   <h5 className="font-medium">{microsite.name}</h5>
                                   <p className="text-sm text-gray-600">{microsite.address}</p>
                                   <p className="text-sm text-gray-500">
-                                    Type: {microsite.type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                    Type:{' '}
+                                    {microsite.type
+                                      .replace('-', ' ')
+                                      .replace(/\b\w/g, l => l.toUpperCase())}
                                   </p>
                                   {microsite.epcRepresentative && (
                                     <p className="text-sm text-emertrix-orange">
@@ -516,14 +590,14 @@ const FacilitySetup = () => {
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <Select onValueChange={(userId) => addExistingOccupant(facility.id, userId)}>
+                        <Select onValueChange={userId => addExistingOccupant(facility.id, userId)}>
                           <SelectTrigger className="w-40">
                             <SelectValue placeholder="Add Existing" />
                           </SelectTrigger>
                           <SelectContent>
-                            {allUsers.map((user) => (
-                              <SelectItem 
-                                key={user._id} 
+                            {allUsers.map(user => (
+                              <SelectItem
+                                key={user._id}
                                 value={user._id}
                                 disabled={facility.assignOccupants.includes(user._id)}
                               >
@@ -532,8 +606,8 @@ const FacilitySetup = () => {
                             ))}
                           </SelectContent>
                         </Select>
-                        <Button 
-                          type="button" 
+                        <Button
+                          type="button"
                           variant="outline"
                           size="sm"
                           onClick={() => openAddPersonModal(facility.id)}
@@ -555,7 +629,7 @@ const FacilitySetup = () => {
 
                     {facility.assignOccupants.length > 0 && (
                       <div className="space-y-3">
-                        {facility.assignOccupants.map((userId) => {
+                        {facility.assignOccupants.map(userId => {
                           const user = getUserById(userId);
                           const isPointOfContact = user?.role === 'point-of-contact';
                           return (
@@ -605,8 +679,8 @@ const FacilitySetup = () => {
             {/* Add Facility Button */}
             {canAddMore && (
               <div className="text-center">
-                <Button 
-                  type="button" 
+                <Button
+                  type="button"
                   variant="outline"
                   onClick={addFacilityForm}
                   className="flex items-center gap-2 border-emertrix-orange text-emertrix-orange hover:bg-emertrix-orange hover:text-white"
@@ -620,14 +694,10 @@ const FacilitySetup = () => {
 
             {/* Bottom Action Buttons */}
             <div className="flex justify-between items-center pt-8 border-t bg-white px-6 py-4 rounded-lg shadow-sm">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={handleSkipForNow}
-              >
+              <Button type="button" variant="outline" onClick={handleSkipForNow}>
                 Skip for now
               </Button>
-              <Button 
+              <Button
                 type="submit"
                 className="bg-emertrix-gradient hover:opacity-90 text-white"
                 size="lg"
@@ -645,11 +715,15 @@ const FacilitySetup = () => {
         onOpenChange={setMicrositeDialogOpen}
         onSave={handleMicrositeSave}
         facilityId={currentFacilityId || 0}
-        existingOccupants={currentFacilityId ? (facilities.find(f => f.id === currentFacilityId)?.assignOccupants || []) : []}
+        existingOccupants={
+          currentFacilityId
+            ? facilities.find(f => f.id === currentFacilityId)?.assignOccupants || []
+            : []
+        }
       />
 
       {/* Add Person Modal */}
-      <AddPersonModal 
+      <AddPersonModal
         isOpen={addPersonModalOpen}
         onClose={handlePersonModalClose}
         onPersonAdded={handlePersonAdded}

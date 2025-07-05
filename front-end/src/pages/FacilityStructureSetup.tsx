@@ -1,8 +1,8 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Building2, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Building2, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
 
 const FacilityStructureSetup = () => {
   const navigate = useNavigate();
@@ -24,7 +24,10 @@ const FacilityStructureSetup = () => {
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
               You need to create a facility first before configuring its structure.
             </p>
-            <Button onClick={() => navigate("/facility-setup")} className="flex items-center gap-2 mx-auto">
+            <Button
+              onClick={() => navigate('/facility-setup')}
+              className="flex items-center gap-2 mx-auto"
+            >
               <Plus className="h-4 w-4" />
               Create Your First Facility
             </Button>

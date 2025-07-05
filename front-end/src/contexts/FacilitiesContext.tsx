@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface Microsite {
@@ -43,7 +42,7 @@ export const FacilitiesProvider = ({ children }: { children: ReactNode }) => {
     const newFacility: FacilityData = {
       ...facilityData,
       id: Date.now().toString(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
     setFacilities(prev => [...prev, newFacility]);
     // TODO: Replace with API call to create facility
@@ -51,9 +50,9 @@ export const FacilitiesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateFacility = (id: string, updates: Partial<Omit<FacilityData, 'id' | 'createdAt'>>) => {
-    setFacilities(prev => prev.map(facility => 
-      facility.id === id ? { ...facility, ...updates } : facility
-    ));
+    setFacilities(prev =>
+      prev.map(facility => (facility.id === id ? { ...facility, ...updates } : facility)),
+    );
     // TODO: Replace with API call to update facility
   };
 
@@ -67,41 +66,47 @@ export const FacilitiesProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const assignOccupantToFacility = (facilityId: string, userId: string) => {
-    setFacilities(prev => prev.map(facility => 
-      facility.id === facilityId 
-        ? { 
-            ...facility, 
-            assignedOccupants: facility.assignedOccupants.includes(userId) 
-              ? facility.assignedOccupants 
-              : [...facility.assignedOccupants, userId]
-          }
-        : facility
-    ));
+    setFacilities(prev =>
+      prev.map(facility =>
+        facility.id === facilityId
+          ? {
+              ...facility,
+              assignedOccupants: facility.assignedOccupants.includes(userId)
+                ? facility.assignedOccupants
+                : [...facility.assignedOccupants, userId],
+            }
+          : facility,
+      ),
+    );
     // TODO: Replace with API call to assign occupant
   };
 
   const removeOccupantFromFacility = (facilityId: string, userId: string) => {
-    setFacilities(prev => prev.map(facility => 
-      facility.id === facilityId 
-        ? { 
-            ...facility, 
-            assignedOccupants: facility.assignedOccupants.filter(id => id !== userId)
-          }
-        : facility
-    ));
+    setFacilities(prev =>
+      prev.map(facility =>
+        facility.id === facilityId
+          ? {
+              ...facility,
+              assignedOccupants: facility.assignedOccupants.filter(id => id !== userId),
+            }
+          : facility,
+      ),
+    );
     // TODO: Replace with API call to remove occupant
   };
 
   return (
-    <FacilitiesContext.Provider value={{
-      facilities,
-      addFacility,
-      updateFacility,
-      removeFacility,
-      getFacilityById,
-      assignOccupantToFacility,
-      removeOccupantFromFacility
-    }}>
+    <FacilitiesContext.Provider
+      value={{
+        facilities,
+        addFacility,
+        updateFacility,
+        removeFacility,
+        getFacilityById,
+        assignOccupantToFacility,
+        removeOccupantFromFacility,
+      }}
+    >
       {children}
     </FacilitiesContext.Provider>
   );

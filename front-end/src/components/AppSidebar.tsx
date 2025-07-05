@@ -1,4 +1,3 @@
-
 import {
   Sidebar,
   SidebarContent,
@@ -13,43 +12,38 @@ import {
   SidebarMenuSubButton,
   SidebarHeader,
   SidebarFooter,
-} from "@/components/ui/sidebar";
-import { EmertrixLogo } from "@/components/EmertrixLogo";
-import { 
-  Users, 
-  BarChart3,
-  BookOpen,
-  Target,
-} from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { useOnboardingState } from "@/hooks/useOnboardingState";
+} from '@/components/ui/sidebar';
+import { EmertrixLogo } from '@/components/EmertrixLogo';
+import { Users, BarChart3, BookOpen, Target } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { useOnboardingState } from '@/hooks/useOnboardingState';
 
 const dashboardItems = [
   {
-    title: "Dashboard",
-    url: "/organization-dashboard",
+    title: 'Dashboard',
+    url: '/organization-dashboard',
     icon: BarChart3,
   },
 ];
 
 const peopleItems = [
   {
-    title: "People",
-    url: "/people",
+    title: 'People',
+    url: '/people',
     icon: Users,
   },
 ];
 
 const preparednessItems = [
   {
-    title: "Training",
-    url: "/training",
+    title: 'Training',
+    url: '/training',
     icon: BookOpen,
   },
   {
-    title: "Exercises",
-    url: "/exercises",
+    title: 'Exercises',
+    url: '/exercises',
     icon: Target,
   },
 ];
@@ -63,9 +57,7 @@ export function AppSidebar() {
 
   // Get user data from onboarding state
   const accountData = onboarding.account;
-  const userInitials = accountData ? 
-    `${accountData.name?.charAt(0) || ''}`.toUpperCase() : 
-    'U';
+  const userInitials = accountData ? `${accountData.name?.charAt(0) || ''}`.toUpperCase() : 'U';
   const userName = accountData?.name || 'User';
   const userRole = 'Safety Manager';
 
@@ -79,7 +71,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {dashboardItems.map((item) => (
+              {dashboardItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} size="lg">
                     <Link to={item.url}>
@@ -96,7 +88,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {peopleItems.map((item) => (
+              {peopleItems.map(item => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} size="lg">
                     <Link to={item.url}>
@@ -116,7 +108,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuSub>
-                  {preparednessItems.map((item) => (
+                  {preparednessItems.map(item => (
                     <SidebarMenuSubItem key={item.title}>
                       <SidebarMenuSubButton asChild isActive={isActive(item.url)}>
                         <Link to={item.url}>

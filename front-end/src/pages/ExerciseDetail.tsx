@@ -1,17 +1,24 @@
-
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Shield, Edit } from "lucide-react";
-import { format } from "date-fns";
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ArrowLeft, Shield, Edit } from 'lucide-react';
+import { format } from 'date-fns';
 
 const ExerciseDetail = () => {
   const navigate = useNavigate();
   const { facilityId, exerciseId } = useParams();
-  const { appData, getExercisesByFacility, getFacilityById, getExerciseReviewByExerciseId } = useApp();
+  const { appData, getExercisesByFacility, getFacilityById, getExerciseReviewByExerciseId } =
+    useApp();
 
   // Redirect to account setup if no data
   if (!appData.isInitialized || appData.facilities.length === 0) {
@@ -55,14 +62,14 @@ const ExerciseDetail = () => {
             EXERCISE
             <span className="text-gray-500 text-lg">#{exercise._id}</span>
           </h1>
-          <p className="text-gray-600">{appData.organization?.name || "Your Organization"}</p>
+          <p className="text-gray-600">{appData.organization?.name || 'Your Organization'}</p>
         </div>
         <div className="flex gap-3">
           <Button onClick={() => navigate(`/create-exercise/${facilityId}`)}>
             <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
-          <Button 
+          <Button
             onClick={() => navigate(`/exercise-review/${facilityId}/${exerciseId}`)}
             variant="outline"
           >
@@ -87,7 +94,7 @@ const ExerciseDetail = () => {
             </div>
             <div>
               <h3 className="font-semibold mb-2">Proposed Date:</h3>
-              <p className="text-gray-700">{format(exercise.proposedDate, "PPP")}</p>
+              <p className="text-gray-700">{format(exercise.proposedDate, 'PPP')}</p>
             </div>
             <div>
               <h3 className="font-semibold mb-2">Proposed Time:</h3>
@@ -117,7 +124,9 @@ const ExerciseDetail = () => {
               <div>
                 <h3 className="font-semibold mb-2">Date Completed:</h3>
                 <p className="text-gray-700">
-                  {exerciseReview.dateCompleted ? format(exerciseReview.dateCompleted, "PPP") : "Not completed"}
+                  {exerciseReview.dateCompleted
+                    ? format(exerciseReview.dateCompleted, 'PPP')
+                    : 'Not completed'}
                 </p>
               </div>
               <div>
@@ -150,7 +159,7 @@ const ExerciseDetail = () => {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    exerciseReview.participants.map((participantId) => {
+                    exerciseReview.participants.map(participantId => {
                       const participant = appData.users.find(u => u._id === participantId);
                       return participant ? (
                         <TableRow key={participantId}>

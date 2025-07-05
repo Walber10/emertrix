@@ -21,10 +21,10 @@ export function useBackendHealth() {
 // Onboarding mutation with optimistic updates
 export function useOnboardingMutation() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: OnboardingData) => submitOnboarding(data),
-    onMutate: async (newOnboarding) => {
+    onMutate: async newOnboarding => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: queryKeys.onboarding });
 
@@ -56,11 +56,11 @@ export function useOnboardingMutation() {
 // Hook for checking if backend is available (useful for showing connection status)
 export function useBackendStatus() {
   const { data, isLoading, error, isError } = useBackendHealth();
-  
+
   return {
     isConnected: !isError && !isLoading,
     isLoading,
     error: error?.message,
     data,
   };
-} 
+}

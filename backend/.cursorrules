@@ -1,0 +1,23 @@
+# Cursor Rules for Backend
+
+## Formatting
+- Use Prettier for all TypeScript, JavaScript, and JSON files
+- Format on save should be enabled
+- Use single quotes for strings
+- Use semicolons
+- Use trailing commas
+- Tab width: 2 spaces
+
+## Code Style
+- Follow TypeScript best practices
+- Use proper type annotations
+- Avoid `any` types when possible
+- Use descriptive variable and function names
+- Keep functions small and focused
+
+## File Organization
+- Keep models in `src/models/`
+- Keep services in `src/services/`
+- Keep routes in `src/routes/`
+- Keep utilities in `src/utils/`
+- Use consistent file naming: `feature.type.ts` 

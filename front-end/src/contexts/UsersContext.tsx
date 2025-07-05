@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface User {
@@ -29,7 +28,7 @@ export const UsersProvider = ({ children }: { children: ReactNode }) => {
     const newUser: User = {
       ...userData,
       id: Date.now().toString(),
-      createdAt: new Date()
+      createdAt: new Date(),
     };
     setUsers(prev => [...prev, newUser]);
     // TODO: Replace with API call to create user
@@ -37,9 +36,7 @@ export const UsersProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const updateUser = (id: string, updates: Partial<Omit<User, 'id' | 'createdAt'>>) => {
-    setUsers(prev => prev.map(user => 
-      user.id === id ? { ...user, ...updates } : user
-    ));
+    setUsers(prev => prev.map(user => (user.id === id ? { ...user, ...updates } : user)));
     // TODO: Replace with API call to update user
   };
 
@@ -57,14 +54,16 @@ export const UsersProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <UsersContext.Provider value={{
-      users,
-      addUser,
-      updateUser,
-      removeUser,
-      getUserById,
-      getUsersByRole
-    }}>
+    <UsersContext.Provider
+      value={{
+        users,
+        addUser,
+        updateUser,
+        removeUser,
+        getUserById,
+        getUsersByRole,
+      }}
+    >
       {children}
     </UsersContext.Provider>
   );

@@ -5,6 +5,7 @@ This directory contains React Query hooks for managing server state in the front
 ## Available Hooks
 
 ### `useBackendHealth()`
+
 Checks if the backend is reachable and returns the response.
 
 ```tsx
@@ -12,15 +13,16 @@ import { useBackendHealth } from './queries';
 
 function MyComponent() {
   const { data, isLoading, error, isError } = useBackendHealth();
-  
+
   if (isLoading) return <div>Checking backend...</div>;
   if (isError) return <div>Backend not reachable: {error.message}</div>;
-  
+
   return <div>Backend is running: {data}</div>;
 }
 ```
 
 ### `useBackendStatus()`
+
 Simplified hook for checking backend connection status.
 
 ```tsx
@@ -28,16 +30,15 @@ import { useBackendStatus } from './queries';
 
 function ConnectionStatus() {
   const { isConnected, isLoading, error } = useBackendStatus();
-  
+
   return (
-    <div>
-      {isLoading ? 'Checking...' : isConnected ? 'Connected' : `Disconnected: ${error}`}
-    </div>
+    <div>{isLoading ? 'Checking...' : isConnected ? 'Connected' : `Disconnected: ${error}`}</div>
   );
 }
 ```
 
 ### `useOnboardingMutation()`
+
 Handles onboarding form submission with optimistic updates.
 
 ```tsx
@@ -45,27 +46,24 @@ import { useOnboardingMutation } from './queries';
 
 function OnboardingForm() {
   const mutation = useOnboardingMutation();
-  
+
   const handleSubmit = (data: OnboardingData) => {
     mutation.mutate(data, {
-      onSuccess: (result) => {
+      onSuccess: result => {
         console.log('Onboarding successful:', result);
         // Navigate to next step
       },
-      onError: (error) => {
+      onError: error => {
         console.error('Onboarding failed:', error);
         // Show error message
-      }
+      },
     });
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       {/* form fields */}
-      <button 
-        type="submit" 
-        disabled={mutation.isPending}
-      >
+      <button type="submit" disabled={mutation.isPending}>
         {mutation.isPending ? 'Submitting...' : 'Submit'}
       </button>
     </form>
@@ -103,6 +101,7 @@ To add a new API endpoint:
 4. Use the hook in your components
 
 Example:
+
 ```tsx
 // In api.ts
 export async function fetchUser(id: string) {
@@ -118,4 +117,4 @@ export function useUser(id: string) {
     enabled: !!id, // Only run if id exists
   });
 }
-``` 
+```

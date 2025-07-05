@@ -1,12 +1,18 @@
-
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, BookOpen, Edit } from "lucide-react";
-import { format } from "date-fns";
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { ArrowLeft, BookOpen, Edit } from 'lucide-react';
+import { format } from 'date-fns';
 
 const TrainingCourseDetail = () => {
   const navigate = useNavigate();
@@ -55,14 +61,14 @@ const TrainingCourseDetail = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{course.courseType}</h1>
-          <p className="text-gray-600">{appData.organization?.name || "Your Organization"}</p>
+          <p className="text-gray-600">{appData.organization?.name || 'Your Organization'}</p>
         </div>
         <div className="flex gap-3">
           <Button onClick={() => navigate(`/book-training/${facilityId}`)}>
             <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
-          <Button 
+          <Button
             onClick={handleMarkComplete}
             variant="outline"
             disabled={course.status === 'completed'}
@@ -85,7 +91,7 @@ const TrainingCourseDetail = () => {
             <div>
               <h3 className="font-semibold mb-2">Start Date:</h3>
               <p className="text-gray-700">
-                {course.scheduledDate ? format(course.scheduledDate, "PPP") : "Not scheduled"}
+                {course.scheduledDate ? format(course.scheduledDate, 'PPP') : 'Not scheduled'}
               </p>
             </div>
             <div>
@@ -120,7 +126,7 @@ const TrainingCourseDetail = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                course.participants.map((participantId) => {
+                course.participants.map(participantId => {
                   const participant = appData.users.find(u => u._id === participantId);
                   return participant ? (
                     <TableRow key={participantId}>

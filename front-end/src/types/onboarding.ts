@@ -1,8 +1,7 @@
-
 export type OnboardingStep =
   | 'plan-selection'
   | 'account-setup'
-  | 'organization-setup' 
+  | 'organization-setup'
   | 'facility-setup'
   | 'complete';
 

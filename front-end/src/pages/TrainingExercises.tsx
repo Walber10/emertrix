@@ -1,7 +1,6 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { GraduationCap, Plus } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { GraduationCap, Plus } from 'lucide-react';
 
 const TrainingExercises = () => {
   return (

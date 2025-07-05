@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IUser extends Document {
   organizationId: Types.ObjectId;
@@ -17,7 +17,7 @@ const UserSchema = new Schema<IUser>({
   phone: { type: String },
   role: { type: String, enum: ['owner', 'admin', 'point-of-contact', 'occupant'], required: true },
   inviteStatus: { type: String, enum: ['pending', 'accepted'], default: 'accepted' },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
-export const User = mongoose.model<IUser>("User", UserSchema); 
+export const User = mongoose.model<IUser>('User', UserSchema);

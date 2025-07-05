@@ -1,33 +1,38 @@
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Users, 
-  Search, 
-  Mail, 
-  Phone, 
-  MapPin, 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Users,
+  Search,
+  Mail,
+  Phone,
+  MapPin,
   UserPlus,
   Edit,
   Trash2,
   Building2,
-  Map
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { AddPersonModal } from "@/components/AddPersonModal";
-import { EditPersonModal } from "@/components/EditPersonModal";
+  Map,
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { AddPersonModal } from '@/components/AddPersonModal';
+import { EditPersonModal } from '@/components/EditPersonModal';
 
 const People = () => {
   const navigate = useNavigate();
   const { appData, removeUser, getAvailableSeats } = useApp();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterRole, setFilterRole] = useState("all-roles");
-  const [sortBy, setSortBy] = useState("name");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterRole, setFilterRole] = useState('all-roles');
+  const [sortBy, setSortBy] = useState('name');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingPerson, setEditingPerson] = useState<any>(null);
@@ -45,47 +50,52 @@ const People = () => {
 
   // Helper function to get facilities and microsites for a user
   const getUserAssignments = (userId: string) => {
-    const userFacilities = facilities.filter(facility => 
-      facility.assignedOccupantIds.includes(userId)
+    const userFacilities = facilities.filter(facility =>
+      facility.assignedOccupantIds.includes(userId),
     );
-    
+
     const assignments = userFacilities.map(facility => {
-      const userMicrosites = facility.microsites?.filter(microsite => 
-        microsite.occupants?.includes(userId)
-      ) || [];
-      
+      const userMicrosites =
+        facility.microsites?.filter(microsite => microsite.occupants?.includes(userId)) || [];
+
       return {
         facility,
-        microsites: userMicrosites
+        microsites: userMicrosites,
       };
     });
-    
+
     return assignments;
   };
 
   // Filter and sort users
   const filteredPeople = users
     .filter(person => {
-      const matchesSearch = person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           person.email.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesFilter = filterRole === "all-roles" || person.role === filterRole;
-      
+      const matchesSearch =
+        person.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        person.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesFilter = filterRole === 'all-roles' || person.role === filterRole;
+
       return matchesSearch && matchesFilter;
     })
     .sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      if (sortBy === "role") return a.role.localeCompare(b.role);
-      if (sortBy === "date") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'role') return a.role.localeCompare(b.role);
+      if (sortBy === 'date')
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       return 0;
     });
 
   const getStatusColor = (role: string) => {
     switch (role) {
-      case "admin": return "bg-green-100 text-green-800";
-      case "point-of-contact": return "bg-blue-100 text-blue-800";
-      case "occupant": return "bg-gray-100 text-gray-800";
-      default: return "bg-gray-100 text-gray-800";
+      case 'admin':
+        return 'bg-green-100 text-green-800';
+      case 'point-of-contact':
+        return 'bg-blue-100 text-blue-800';
+      case 'occupant':
+        return 'bg-gray-100 text-gray-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -109,7 +119,7 @@ const People = () => {
     admins: users.filter(u => u.role === 'admin').length,
     pointsOfContact: users.filter(u => u.role === 'point-of-contact').length,
     occupants: users.filter(u => u.role === 'occupant').length,
-    availableSeats: availableSeats
+    availableSeats: availableSeats,
   };
 
   // Empty state component
@@ -119,10 +129,11 @@ const People = () => {
         <Users className="h-16 w-16 text-gray-400 mx-auto mb-6" />
         <h3 className="text-2xl font-semibold text-gray-900 mb-4">No People Added Yet</h3>
         <p className="text-gray-600 mb-8 max-w-md mx-auto">
-          Start building your emergency management team by adding people to your organization. You can assign roles and manage emergency responsibilities.
+          Start building your emergency management team by adding people to your organization. You
+          can assign roles and manage emergency responsibilities.
         </p>
-        <Button 
-          size="lg" 
+        <Button
+          size="lg"
           className="flex items-center gap-2 mx-auto bg-black hover:bg-gray-800 text-white"
           onClick={() => setIsAddModalOpen(true)}
           disabled={availableSeats <= 0}
@@ -148,7 +159,7 @@ const People = () => {
           </p>
         </div>
         {users.length > 0 && (
-          <Button 
+          <Button
             className="bg-black hover:bg-gray-800 text-white"
             onClick={() => setIsAddModalOpen(true)}
             disabled={availableSeats <= 0}
@@ -176,7 +187,7 @@ const People = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
@@ -190,7 +201,7 @@ const People = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
@@ -204,7 +215,7 @@ const People = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center space-x-2">
@@ -241,7 +252,7 @@ const People = () => {
                   <Input
                     placeholder="Search people by name or email..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={e => setSearchTerm(e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -277,7 +288,8 @@ const People = () => {
             <CardHeader>
               <CardTitle>People Directory</CardTitle>
               <CardDescription>
-                View all occupants with their contact info, assigned facilities, microsites, and roles
+                View all occupants with their contact info, assigned facilities, microsites, and
+                roles
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -289,16 +301,22 @@ const People = () => {
                     <p className="text-sm">Try adjusting your search or filters</p>
                   </div>
                 ) : (
-                  filteredPeople.map((person) => {
+                  filteredPeople.map(person => {
                     const assignments = getUserAssignments(person._id);
-                    
+
                     return (
-                      <div key={person._id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                      <div
+                        key={person._id}
+                        className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                      >
                         <div className="flex items-start justify-between">
                           <div className="flex items-start space-x-4 flex-1">
                             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                               <span className="text-sm font-medium text-blue-600">
-                                {person.name.split(' ').map(n => n[0]).join('')}
+                                {person.name
+                                  .split(' ')
+                                  .map(n => n[0])
+                                  .join('')}
                               </span>
                             </div>
                             <div className="flex-1 min-w-0">
@@ -315,28 +333,39 @@ const People = () => {
                               </div>
                               <div className="flex items-center space-x-2 mt-2">
                                 <Badge className={getStatusColor(person.role)}>
-                                  {person.role.charAt(0).toUpperCase() + person.role.slice(1).replace('-', ' ')}
+                                  {person.role.charAt(0).toUpperCase() +
+                                    person.role.slice(1).replace('-', ' ')}
                                 </Badge>
                               </div>
-                              
+
                               {/* Facility and Microsite Assignments */}
                               {assignments.length > 0 && (
                                 <div className="mt-3 space-y-2">
                                   <p className="text-sm font-medium text-gray-700">Assignments:</p>
-                                  {assignments.map((assignment) => (
-                                    <div key={assignment.facility._id} className="pl-2 border-l-2 border-blue-200">
+                                  {assignments.map(assignment => (
+                                    <div
+                                      key={assignment.facility._id}
+                                      className="pl-2 border-l-2 border-blue-200"
+                                    >
                                       <div className="flex items-center space-x-2 text-sm">
                                         <Building2 className="h-3 w-3 text-blue-600" />
-                                        <span className="font-medium text-blue-600">{assignment.facility.name}</span>
+                                        <span className="font-medium text-blue-600">
+                                          {assignment.facility.name}
+                                        </span>
                                         <span className="text-gray-500">•</span>
                                         <MapPin className="h-3 w-3 text-gray-500" />
-                                        <span className="text-gray-600 truncate">{assignment.facility.address}</span>
+                                        <span className="text-gray-600 truncate">
+                                          {assignment.facility.address}
+                                        </span>
                                       </div>
                                       {assignment.microsites.length > 0 && (
                                         <div className="ml-4 mt-1">
                                           <div className="flex items-center space-x-2 text-xs text-gray-600">
                                             <Map className="h-3 w-3" />
-                                            <span>Microsites: {assignment.microsites.map(m => m.name).join(', ')}</span>
+                                            <span>
+                                              Microsites:{' '}
+                                              {assignment.microsites.map(m => m.name).join(', ')}
+                                            </span>
                                           </div>
                                         </div>
                                       )}
@@ -347,16 +376,16 @@ const People = () => {
                             </div>
                           </div>
                           <div className="flex items-center space-x-2 flex-shrink-0">
-                            <Button 
-                              size="sm" 
+                            <Button
+                              size="sm"
                               variant="ghost"
                               onClick={() => handleEditUser(person)}
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
-                            <Button 
-                              size="sm" 
-                              variant="ghost" 
+                            <Button
+                              size="sm"
+                              variant="ghost"
                               className="text-red-600 hover:text-red-700"
                               onClick={() => handleDeleteUser(person._id)}
                             >
@@ -377,10 +406,7 @@ const People = () => {
         </>
       )}
 
-      <AddPersonModal 
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-      />
+      <AddPersonModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
 
       <EditPersonModal
         isOpen={isEditModalOpen}

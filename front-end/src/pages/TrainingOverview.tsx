@@ -1,20 +1,26 @@
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useApp } from "@/contexts/AppContext";
-import { useOnboardingState } from "@/hooks/useOnboardingState";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search, BookOpen, Calendar } from "lucide-react";
-import { format } from "date-fns";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useApp } from '@/contexts/AppContext';
+import { useOnboardingState } from '@/hooks/useOnboardingState';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Search, BookOpen, Calendar } from 'lucide-react';
+import { format } from 'date-fns';
 
 const TrainingOverview = () => {
   const navigate = useNavigate();
   const { appData, getTrainingCoursesByFacility, getFacilityById, getUserById } = useApp();
   const { onboarding } = useOnboardingState();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Redirect to account setup if no data
   if (!appData.isInitialized || appData.facilities.length === 0) {
@@ -23,21 +29,22 @@ const TrainingOverview = () => {
   }
 
   // Get organization name from context
-  const organizationName = onboarding.organization?.name || "Your Organization";
+  const organizationName = onboarding.organization?.name || 'Your Organization';
 
   // Get all training courses across all facilities
-  const allTrainingCourses = appData.facilities.flatMap(facility => 
+  const allTrainingCourses = appData.facilities.flatMap(facility =>
     getTrainingCoursesByFacility(facility._id).map(course => ({
       ...course,
-      facility: facility
-    }))
+      facility: facility,
+    })),
   );
 
   // Filter courses based on search
-  const filteredCourses = allTrainingCourses.filter(course =>
-    course.courseType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.organiserName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.facility.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCourses = allTrainingCourses.filter(
+    course =>
+      course.courseType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.organiserName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.facility.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleViewCourse = (courseId: string, facilityId: string) => {
@@ -79,13 +86,17 @@ const TrainingOverview = () => {
               <Input
                 placeholder="Search"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm">[Filter]</Button>
-              <Button variant="outline" size="sm">[Sort By]</Button>
+              <Button variant="outline" size="sm">
+                [Filter]
+              </Button>
+              <Button variant="outline" size="sm">
+                [Sort By]
+              </Button>
             </div>
           </div>
 
@@ -107,17 +118,17 @@ const TrainingOverview = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredCourses.map((course) => (
+                filteredCourses.map(course => (
                   <TableRow key={course._id}>
                     <TableCell className="font-medium">{course.courseType}</TableCell>
                     <TableCell>
-                      {course.scheduledDate ? format(course.scheduledDate, "PPP") : "Not scheduled"}
+                      {course.scheduledDate ? format(course.scheduledDate, 'PPP') : 'Not scheduled'}
                     </TableCell>
                     <TableCell>{course.organiserName}</TableCell>
                     <TableCell>{course.facility.name}</TableCell>
                     <TableCell className="text-right">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         onClick={() => handleViewCourse(course._id, course.facility._id)}
                       >

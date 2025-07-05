@@ -1,12 +1,11 @@
-
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { UserPlus, ArrowLeft, Trash2, Mail } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { UserPlus, ArrowLeft, Trash2, Mail } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 interface InvitedAdmin {
   id: string;
@@ -21,10 +20,10 @@ const InviteAdmin = () => {
   const { toast } = useToast();
   const [invitedAdmins, setInvitedAdmins] = useState<InvitedAdmin[]>([]);
   const [currentInvite, setCurrentInvite] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    jobTitle: ""
+    firstName: '',
+    lastName: '',
+    email: '',
+    jobTitle: '',
   });
 
   const updateCurrentInvite = (field: string, value: string) => {
@@ -34,9 +33,9 @@ const InviteAdmin = () => {
   const addInvitedAdmin = () => {
     if (!currentInvite.firstName || !currentInvite.lastName || !currentInvite.email) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in first name, last name, and email for the admin",
-        variant: "destructive"
+        title: 'Missing Information',
+        description: 'Please fill in first name, last name, and email for the admin',
+        variant: 'destructive',
       });
       return;
     }
@@ -44,58 +43,58 @@ const InviteAdmin = () => {
     // Check if email already exists
     if (invitedAdmins.some(admin => admin.email === currentInvite.email)) {
       toast({
-        title: "Duplicate Email",
-        description: "An admin with this email has already been invited",
-        variant: "destructive"
+        title: 'Duplicate Email',
+        description: 'An admin with this email has already been invited',
+        variant: 'destructive',
       });
       return;
     }
 
     const newAdmin: InvitedAdmin = {
       id: Date.now().toString(),
-      ...currentInvite
+      ...currentInvite,
     };
 
     setInvitedAdmins(prev => [...prev, newAdmin]);
     setCurrentInvite({
-      firstName: "",
-      lastName: "",
-      email: "",
-      jobTitle: ""
+      firstName: '',
+      lastName: '',
+      email: '',
+      jobTitle: '',
     });
 
     toast({
-      title: "Admin Added",
-      description: `${newAdmin.firstName} ${newAdmin.lastName} will be invited upon sending invitations`
+      title: 'Admin Added',
+      description: `${newAdmin.firstName} ${newAdmin.lastName} will be invited upon sending invitations`,
     });
   };
 
   const removeInvitedAdmin = (id: string) => {
     setInvitedAdmins(prev => prev.filter(admin => admin.id !== id));
     toast({
-      title: "Admin Removed",
-      description: "Admin invitation removed"
+      title: 'Admin Removed',
+      description: 'Admin invitation removed',
     });
   };
 
   const sendInvitations = () => {
     if (invitedAdmins.length === 0) {
       toast({
-        title: "No Invitations to Send",
-        description: "Please add at least one admin to invite",
-        variant: "destructive"
+        title: 'No Invitations to Send',
+        description: 'Please add at least one admin to invite',
+        variant: 'destructive',
       });
       return;
     }
 
     toast({
-      title: "Invitations Sent",
-      description: `${invitedAdmins.length} admin invitation(s) have been sent via email`
+      title: 'Invitations Sent',
+      description: `${invitedAdmins.length} admin invitation(s) have been sent via email`,
     });
 
     // Clear the list after sending
     setInvitedAdmins([]);
-    navigate("/organization-dashboard");
+    navigate('/organization-dashboard');
   };
 
   return (
@@ -103,9 +102,9 @@ const InviteAdmin = () => {
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate("/organization-dashboard")}
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/organization-dashboard')}
             className="mr-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -124,7 +123,8 @@ const InviteAdmin = () => {
               Invite Additional Admins
             </CardTitle>
             <CardDescription>
-              Invite other organizational admins. Each will occupy one occupant seat and receive full access to your organization's account.
+              Invite other organizational admins. Each will occupy one occupant seat and receive
+              full access to your organization's account.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -137,7 +137,7 @@ const InviteAdmin = () => {
                   <Input
                     id="inviteFirstName"
                     value={currentInvite.firstName}
-                    onChange={(e) => updateCurrentInvite("firstName", e.target.value)}
+                    onChange={e => updateCurrentInvite('firstName', e.target.value)}
                     placeholder="First name"
                   />
                 </div>
@@ -146,7 +146,7 @@ const InviteAdmin = () => {
                   <Input
                     id="inviteLastName"
                     value={currentInvite.lastName}
-                    onChange={(e) => updateCurrentInvite("lastName", e.target.value)}
+                    onChange={e => updateCurrentInvite('lastName', e.target.value)}
                     placeholder="Last name"
                   />
                 </div>
@@ -157,7 +157,7 @@ const InviteAdmin = () => {
                   id="inviteEmail"
                   type="email"
                   value={currentInvite.email}
-                  onChange={(e) => updateCurrentInvite("email", e.target.value)}
+                  onChange={e => updateCurrentInvite('email', e.target.value)}
                   placeholder="email@example.com"
                 />
               </div>
@@ -166,7 +166,7 @@ const InviteAdmin = () => {
                 <Input
                   id="inviteJobTitle"
                   value={currentInvite.jobTitle}
-                  onChange={(e) => updateCurrentInvite("jobTitle", e.target.value)}
+                  onChange={e => updateCurrentInvite('jobTitle', e.target.value)}
                   placeholder="e.g., Emergency Coordinator"
                 />
               </div>
@@ -181,12 +181,19 @@ const InviteAdmin = () => {
               <div>
                 <h4 className="font-medium mb-4">Invited Admins ({invitedAdmins.length})</h4>
                 <div className="space-y-2">
-                  {invitedAdmins.map((admin) => (
-                    <div key={admin.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  {invitedAdmins.map(admin => (
+                    <div
+                      key={admin.id}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
                       <div>
-                        <p className="font-medium">{admin.firstName} {admin.lastName}</p>
+                        <p className="font-medium">
+                          {admin.firstName} {admin.lastName}
+                        </p>
                         <p className="text-sm text-gray-600">{admin.email}</p>
-                        {admin.jobTitle && <p className="text-sm text-gray-500">{admin.jobTitle}</p>}
+                        {admin.jobTitle && (
+                          <p className="text-sm text-gray-500">{admin.jobTitle}</p>
+                        )}
                       </div>
                       <Button
                         variant="ghost"
@@ -200,7 +207,8 @@ const InviteAdmin = () => {
                   ))}
                 </div>
                 <p className="text-sm text-gray-600 mt-4">
-                  Each invited admin will receive an email invitation with a unique registration link and will occupy one occupant seat.
+                  Each invited admin will receive an email invitation with a unique registration
+                  link and will occupy one occupant seat.
                 </p>
               </div>
             )}
@@ -215,16 +223,10 @@ const InviteAdmin = () => {
           </CardContent>
 
           <div className="flex justify-between p-6 border-t">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate("/organization-dashboard")}
-            >
+            <Button variant="outline" onClick={() => navigate('/organization-dashboard')}>
               Cancel
             </Button>
-            <Button 
-              onClick={sendInvitations}
-              disabled={invitedAdmins.length === 0}
-            >
+            <Button onClick={sendInvitations} disabled={invitedAdmins.length === 0}>
               <Mail className="h-4 w-4 mr-2" />
               Send Invitations ({invitedAdmins.length})
             </Button>

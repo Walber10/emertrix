@@ -1,5 +1,3 @@
-
-
 // Core Types matching MongoDB schema structure
 
 export interface Organization {
@@ -131,4 +129,3 @@ export interface EmergencyControlOrganization {
   facilityId: string;
   controlHierarchy: string[];
 }
-

@@ -1,10 +1,9 @@
-
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AlertTriangle, Plus, Trash2 } from "lucide-react";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { AlertTriangle, Plus, Trash2 } from 'lucide-react';
 
 interface Risk {
   id: string;
@@ -18,18 +17,19 @@ interface Risk {
 const RiskAssessment = () => {
   const [risks, setRisks] = useState<Risk[]>([]);
   const [newRisk, setNewRisk] = useState({
-    hazard: "",
-    likelihood: "Medium",
-    severity: "Medium",
-    controls: ""
+    hazard: '',
+    likelihood: 'Medium',
+    severity: 'Medium',
+    controls: '',
   });
 
   const calculateRiskLevel = (likelihood: string, severity: string) => {
-    const score = (likelihood === "High" ? 3 : likelihood === "Medium" ? 2 : 1) * 
-                  (severity === "High" ? 3 : severity === "Medium" ? 2 : 1);
-    if (score >= 6) return "High";
-    if (score >= 3) return "Medium";
-    return "Low";
+    const score =
+      (likelihood === 'High' ? 3 : likelihood === 'Medium' ? 2 : 1) *
+      (severity === 'High' ? 3 : severity === 'Medium' ? 2 : 1);
+    if (score >= 6) return 'High';
+    if (score >= 3) return 'Medium';
+    return 'Low';
   };
 
   const addRisk = () => {
@@ -37,10 +37,10 @@ const RiskAssessment = () => {
       const risk: Risk = {
         id: Date.now().toString(),
         ...newRisk,
-        riskLevel: calculateRiskLevel(newRisk.likelihood, newRisk.severity)
+        riskLevel: calculateRiskLevel(newRisk.likelihood, newRisk.severity),
       };
       setRisks([...risks, risk]);
-      setNewRisk({ hazard: "", likelihood: "Medium", severity: "Medium", controls: "" });
+      setNewRisk({ hazard: '', likelihood: 'Medium', severity: 'Medium', controls: '' });
     }
   };
 
@@ -50,10 +50,14 @@ const RiskAssessment = () => {
 
   const getRiskColor = (level: string) => {
     switch (level) {
-      case "High": return "text-red-600 bg-red-50";
-      case "Medium": return "text-yellow-600 bg-yellow-50";
-      case "Low": return "text-green-600 bg-green-50";
-      default: return "text-gray-600 bg-gray-50";
+      case 'High':
+        return 'text-red-600 bg-red-50';
+      case 'Medium':
+        return 'text-yellow-600 bg-yellow-50';
+      case 'Low':
+        return 'text-green-600 bg-green-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
     }
   };
 
@@ -63,7 +67,9 @@ const RiskAssessment = () => {
         <AlertTriangle className="h-8 w-8 text-orange-600" />
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Risk Assessment</h1>
-          <p className="text-gray-600">Identify and evaluate potential risks and hazards in your facility</p>
+          <p className="text-gray-600">
+            Identify and evaluate potential risks and hazards in your facility
+          </p>
         </div>
       </div>
 
@@ -82,7 +88,7 @@ const RiskAssessment = () => {
                 id="hazard"
                 placeholder="e.g., Fire, Chemical spill, Equipment failure"
                 value={newRisk.hazard}
-                onChange={(e) => setNewRisk({ ...newRisk, hazard: e.target.value })}
+                onChange={e => setNewRisk({ ...newRisk, hazard: e.target.value })}
               />
             </div>
             <div>
@@ -91,7 +97,7 @@ const RiskAssessment = () => {
                 id="controls"
                 placeholder="e.g., Fire extinguishers, Safety protocols"
                 value={newRisk.controls}
-                onChange={(e) => setNewRisk({ ...newRisk, controls: e.target.value })}
+                onChange={e => setNewRisk({ ...newRisk, controls: e.target.value })}
               />
             </div>
             <div>
@@ -100,7 +106,7 @@ const RiskAssessment = () => {
                 id="likelihood"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 value={newRisk.likelihood}
-                onChange={(e) => setNewRisk({ ...newRisk, likelihood: e.target.value })}
+                onChange={e => setNewRisk({ ...newRisk, likelihood: e.target.value })}
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -113,7 +119,7 @@ const RiskAssessment = () => {
                 id="severity"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 value={newRisk.severity}
-                onChange={(e) => setNewRisk({ ...newRisk, severity: e.target.value })}
+                onChange={e => setNewRisk({ ...newRisk, severity: e.target.value })}
               >
                 <option value="Low">Low</option>
                 <option value="Medium">Medium</option>
@@ -135,19 +141,17 @@ const RiskAssessment = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {risks.map((risk) => (
+              {risks.map(risk => (
                 <div key={risk.id} className="border rounded-lg p-4">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-semibold">{risk.hazard}</h3>
                     <div className="flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded text-xs font-medium ${getRiskColor(risk.riskLevel)}`}>
+                      <span
+                        className={`px-2 py-1 rounded text-xs font-medium ${getRiskColor(risk.riskLevel)}`}
+                      >
                         {risk.riskLevel} Risk
                       </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => removeRisk(risk.id)}
-                      >
+                      <Button variant="outline" size="sm" onClick={() => removeRisk(risk.id)}>
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>

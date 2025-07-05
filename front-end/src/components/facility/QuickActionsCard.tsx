@@ -1,7 +1,6 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const QuickActionsCard = () => {
   const navigate = useNavigate();
@@ -12,9 +11,9 @@ const QuickActionsCard = () => {
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
-        <Button 
+        <Button
           className="w-full bg-black hover:bg-gray-800 text-white"
-          onClick={() => navigate("/emergency-plan-setup")}
+          onClick={() => navigate('/emergency-plan-setup')}
         >
           View Emergency Plan
         </Button>

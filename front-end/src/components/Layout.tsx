@@ -1,8 +1,7 @@
-
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/AppSidebar";
-import { EmertrixLogo } from "@/components/EmertrixLogo";
-import { ReactNode } from "react";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
+import { EmertrixLogo } from '@/components/EmertrixLogo';
+import { ReactNode } from 'react';
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,9 +18,7 @@ export function Layout({ children }: LayoutProps) {
             <div className="flex-1" />
             <EmertrixLogo size="sm" />
           </header>
-          <main className="flex-1 overflow-auto">
-            {children}
-          </main>
+          <main className="flex-1 overflow-auto">{children}</main>
         </SidebarInset>
       </div>
     </SidebarProvider>

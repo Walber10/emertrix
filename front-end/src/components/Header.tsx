@@ -1,7 +1,6 @@
-
-import { Button } from "@/components/ui/button";
-import { Building2, Menu, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Button } from '@/components/ui/button';
+import { Building2, Menu, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -14,10 +13,16 @@ const Header = () => {
               <span className="text-xl font-semibold text-gray-900">Emergency Planning MVP</span>
             </Link>
             <nav className="hidden md:flex space-x-6">
-              <Link to="/facilities" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link
+                to="/facilities"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
                 Facilities
               </Link>
-              <Link to="/emergency-setup" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link
+                to="/emergency-setup"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
                 Emergency Setup
               </Link>
               <Link to="/training" className="text-gray-600 hover:text-gray-900 transition-colors">

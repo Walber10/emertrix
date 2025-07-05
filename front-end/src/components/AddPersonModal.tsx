@@ -1,14 +1,25 @@
-
-import { useState } from "react";
-import { useApp } from "@/contexts/AppContext";
-import { useParams } from "react-router-dom";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from 'react';
+import { useApp } from '@/contexts/AppContext';
+import { useParams } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useToast } from '@/hooks/use-toast';
 
 interface AddPersonModalProps {
   isOpen: boolean;
@@ -18,17 +29,17 @@ interface AddPersonModalProps {
   hideAssignToFacility?: boolean;
 }
 
-export const AddPersonModal = ({ 
-  isOpen, 
-  onClose, 
-  defaultFacilityId, 
+export const AddPersonModal = ({
+  isOpen,
+  onClose,
+  defaultFacilityId,
   onPersonAdded,
-  hideAssignToFacility = false 
+  hideAssignToFacility = false,
 }: AddPersonModalProps) => {
   const { addUser, assignOccupantToFacility, appData } = useApp();
   const { toast } = useToast();
   const { id: urlFacilityId } = useParams();
-  
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -39,17 +50,17 @@ export const AddPersonModal = ({
     assignToFacility: defaultFacilityId || urlFacilityId || 'no-facility',
     assignToMicrosite: 'no-microsite',
     profilePicture: null as File | null,
-    qualifications: null as File | null
+    qualifications: null as File | null,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Please fill in all required fields',
+        variant: 'destructive',
       });
       return;
     }
@@ -64,26 +75,26 @@ export const AddPersonModal = ({
         phone: formData.phone,
         role: finalRole,
         organizationId: appData.organization?._id || '',
-        facilityIds: []
+        facilityIds: [],
       });
 
       // If facility is selected or hideAssignToFacility is true (auto-assign), assign the user to it
-      const facilityToAssign = hideAssignToFacility 
-        ? (defaultFacilityId || urlFacilityId)
+      const facilityToAssign = hideAssignToFacility
+        ? defaultFacilityId || urlFacilityId
         : formData.assignToFacility;
 
       if (facilityToAssign && facilityToAssign !== 'no-facility') {
         assignOccupantToFacility(facilityToAssign, newUser._id);
       }
-      
+
       // Always call the callback to notify parent component
       if (onPersonAdded) {
         onPersonAdded(newUser._id);
       }
 
       toast({
-        title: "Success",
-        description: `${formData.firstName} ${formData.lastName} has been added successfully`
+        title: 'Success',
+        description: `${formData.firstName} ${formData.lastName} has been added successfully`,
       });
 
       // Reset form
@@ -97,16 +108,16 @@ export const AddPersonModal = ({
         assignToFacility: defaultFacilityId || urlFacilityId || 'no-facility',
         assignToMicrosite: 'no-microsite',
         profilePicture: null,
-        qualifications: null
+        qualifications: null,
       });
 
       onClose();
     } catch (error) {
       console.error('Error adding person:', error);
       toast({
-        title: "Error",
-        description: "Failed to add person",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to add person',
+        variant: 'destructive',
       });
     }
   };
@@ -114,21 +125,22 @@ export const AddPersonModal = ({
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handleFileChange = (field: string, file: File | null) => {
     setFormData(prev => ({
       ...prev,
-      [field]: file
+      [field]: file,
     }));
   };
 
   // Get current facility's microsites if facility is selected
-  const selectedFacility = formData.assignToFacility && formData.assignToFacility !== 'no-facility'
-    ? appData.facilities.find(f => f._id === formData.assignToFacility)
-    : null;
+  const selectedFacility =
+    formData.assignToFacility && formData.assignToFacility !== 'no-facility'
+      ? appData.facilities.find(f => f._id === formData.assignToFacility)
+      : null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -143,7 +155,7 @@ export const AddPersonModal = ({
               <Input
                 id="firstName"
                 value={formData.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                onChange={e => handleInputChange('firstName', e.target.value)}
                 placeholder="Enter first name"
                 required
               />
@@ -154,7 +166,7 @@ export const AddPersonModal = ({
               <Input
                 id="lastName"
                 value={formData.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                onChange={e => handleInputChange('lastName', e.target.value)}
                 placeholder="Enter last name"
                 required
               />
@@ -167,7 +179,7 @@ export const AddPersonModal = ({
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
+              onChange={e => handleInputChange('email', e.target.value)}
               placeholder="Enter email address"
               required
             />
@@ -179,7 +191,7 @@ export const AddPersonModal = ({
               id="phone"
               type="tel"
               value={formData.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
+              onChange={e => handleInputChange('phone', e.target.value)}
               placeholder="Enter phone number"
               required
             />
@@ -187,7 +199,7 @@ export const AddPersonModal = ({
 
           <div className="space-y-2">
             <Label htmlFor="role">Role</Label>
-            <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
+            <Select value={formData.role} onValueChange={value => handleInputChange('role', value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
@@ -202,9 +214,12 @@ export const AddPersonModal = ({
             <Checkbox
               id="isPointOfContact"
               checked={formData.isPointOfContact}
-              onCheckedChange={(checked) => handleInputChange('isPointOfContact', checked as boolean)}
+              onCheckedChange={checked => handleInputChange('isPointOfContact', checked as boolean)}
             />
-            <Label htmlFor="isPointOfContact" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            <Label
+              htmlFor="isPointOfContact"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
               Designate as Point of Contact
             </Label>
           </div>
@@ -212,9 +227,9 @@ export const AddPersonModal = ({
           {!hideAssignToFacility && (
             <div className="space-y-2">
               <Label htmlFor="assignToFacility">Assign to Facility (Optional)</Label>
-              <Select 
-                value={formData.assignToFacility} 
-                onValueChange={(value) => {
+              <Select
+                value={formData.assignToFacility}
+                onValueChange={value => {
                   handleInputChange('assignToFacility', value);
                   // Reset microsite when facility changes
                   if (value === 'no-facility') {
@@ -227,7 +242,7 @@ export const AddPersonModal = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="no-facility">No facility assignment</SelectItem>
-                  {appData.facilities.map((facility) => (
+                  {appData.facilities.map(facility => (
                     <SelectItem key={facility._id} value={facility._id}>
                       {facility.name}
                     </SelectItem>
@@ -237,27 +252,29 @@ export const AddPersonModal = ({
             </div>
           )}
 
-          {selectedFacility && selectedFacility.microsites && selectedFacility.microsites.length > 0 && (
-            <div className="space-y-2">
-              <Label htmlFor="assignToMicrosite">Assign to Microsite (Optional)</Label>
-              <Select 
-                value={formData.assignToMicrosite} 
-                onValueChange={(value) => handleInputChange('assignToMicrosite', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select microsite" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="no-microsite">No microsite assignment</SelectItem>
-                  {selectedFacility.microsites.map((microsite) => (
-                    <SelectItem key={microsite.id} value={microsite.id}>
-                      {microsite.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          {selectedFacility &&
+            selectedFacility.microsites &&
+            selectedFacility.microsites.length > 0 && (
+              <div className="space-y-2">
+                <Label htmlFor="assignToMicrosite">Assign to Microsite (Optional)</Label>
+                <Select
+                  value={formData.assignToMicrosite}
+                  onValueChange={value => handleInputChange('assignToMicrosite', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select microsite" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="no-microsite">No microsite assignment</SelectItem>
+                    {selectedFacility.microsites.map(microsite => (
+                      <SelectItem key={microsite.id} value={microsite.id}>
+                        {microsite.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
           <div className="space-y-2">
             <Label htmlFor="profilePicture">Profile Picture (Optional)</Label>
@@ -265,7 +282,7 @@ export const AddPersonModal = ({
               id="profilePicture"
               type="file"
               accept="image/*"
-              onChange={(e) => handleFileChange('profilePicture', e.target.files?.[0] || null)}
+              onChange={e => handleFileChange('profilePicture', e.target.files?.[0] || null)}
             />
           </div>
 
@@ -275,15 +292,13 @@ export const AddPersonModal = ({
               id="qualifications"
               type="file"
               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-              onChange={(e) => handleFileChange('qualifications', e.target.files?.[0] || null)}
+              onChange={e => handleFileChange('qualifications', e.target.files?.[0] || null)}
             />
           </div>
 
           {/* What happens next section */}
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <p className="text-sm font-medium text-blue-800 mb-2">
-              What happens next:
-            </p>
+            <p className="text-sm font-medium text-blue-800 mb-2">What happens next:</p>
             <ul className="text-sm text-blue-700 space-y-1">
               <li>• User profile will be created and assigned to a seat</li>
               <li>• Registration email will be sent for login access</li>

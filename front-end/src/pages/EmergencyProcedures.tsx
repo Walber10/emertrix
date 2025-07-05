@@ -1,10 +1,9 @@
-
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Shield, Plus, Trash2, Edit } from "lucide-react";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Shield, Plus, Trash2, Edit } from 'lucide-react';
 
 interface Procedure {
   id: string;
@@ -17,19 +16,26 @@ interface Procedure {
 const EmergencyProcedures = () => {
   const [procedures, setProcedures] = useState<Procedure[]>([]);
   const [newProcedure, setNewProcedure] = useState({
-    title: "",
-    type: "Evacuation",
-    steps: [""],
-    assignedRole: ""
+    title: '',
+    type: 'Evacuation',
+    steps: [''],
+    assignedRole: '',
   });
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const procedureTypes = ["Evacuation", "Fire", "Medical Emergency", "Chemical Spill", "Lockdown", "Severe Weather"];
+  const procedureTypes = [
+    'Evacuation',
+    'Fire',
+    'Medical Emergency',
+    'Chemical Spill',
+    'Lockdown',
+    'Severe Weather',
+  ];
 
   const addStep = () => {
     setNewProcedure({
       ...newProcedure,
-      steps: [...newProcedure.steps, ""]
+      steps: [...newProcedure.steps, ''],
     });
   };
 
@@ -49,17 +55,17 @@ const EmergencyProcedures = () => {
       const procedure: Procedure = {
         id: editingId || Date.now().toString(),
         ...newProcedure,
-        steps: newProcedure.steps.filter(step => step.trim())
+        steps: newProcedure.steps.filter(step => step.trim()),
       };
-      
+
       if (editingId) {
-        setProcedures(procedures.map(p => p.id === editingId ? procedure : p));
+        setProcedures(procedures.map(p => (p.id === editingId ? procedure : p)));
         setEditingId(null);
       } else {
         setProcedures([...procedures, procedure]);
       }
-      
-      setNewProcedure({ title: "", type: "Evacuation", steps: [""], assignedRole: "" });
+
+      setNewProcedure({ title: '', type: 'Evacuation', steps: [''], assignedRole: '' });
     }
   };
 
@@ -67,8 +73,8 @@ const EmergencyProcedures = () => {
     setNewProcedure({
       title: procedure.title,
       type: procedure.type,
-      steps: [...procedure.steps, ""],
-      assignedRole: procedure.assignedRole
+      steps: [...procedure.steps, ''],
+      assignedRole: procedure.assignedRole,
     });
     setEditingId(procedure.id);
   };
@@ -89,7 +95,7 @@ const EmergencyProcedures = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>{editingId ? "Edit" : "Create New"} Emergency Procedure</CardTitle>
+          <CardTitle>{editingId ? 'Edit' : 'Create New'} Emergency Procedure</CardTitle>
           <CardDescription>
             Define clear, step-by-step procedures for emergency scenarios
           </CardDescription>
@@ -102,7 +108,7 @@ const EmergencyProcedures = () => {
                 id="title"
                 placeholder="e.g., Fire Evacuation Protocol"
                 value={newProcedure.title}
-                onChange={(e) => setNewProcedure({ ...newProcedure, title: e.target.value })}
+                onChange={e => setNewProcedure({ ...newProcedure, title: e.target.value })}
               />
             </div>
             <div>
@@ -111,10 +117,12 @@ const EmergencyProcedures = () => {
                 id="type"
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                 value={newProcedure.type}
-                onChange={(e) => setNewProcedure({ ...newProcedure, type: e.target.value })}
+                onChange={e => setNewProcedure({ ...newProcedure, type: e.target.value })}
               >
                 {procedureTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
                 ))}
               </select>
             </div>
@@ -124,7 +132,7 @@ const EmergencyProcedures = () => {
                 id="assignedRole"
                 placeholder="e.g., Floor Warden, Safety Officer"
                 value={newProcedure.assignedRole}
-                onChange={(e) => setNewProcedure({ ...newProcedure, assignedRole: e.target.value })}
+                onChange={e => setNewProcedure({ ...newProcedure, assignedRole: e.target.value })}
               />
             </div>
           </div>
@@ -146,14 +154,10 @@ const EmergencyProcedures = () => {
                   <Input
                     placeholder={`Step ${index + 1}...`}
                     value={step}
-                    onChange={(e) => updateStep(index, e.target.value)}
+                    onChange={e => updateStep(index, e.target.value)}
                   />
                   {newProcedure.steps.length > 1 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => removeStep(index)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => removeStep(index)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   )}
@@ -164,14 +168,14 @@ const EmergencyProcedures = () => {
 
           <div className="flex gap-2">
             <Button onClick={saveProcedure}>
-              {editingId ? "Update Procedure" : "Save Procedure"}
+              {editingId ? 'Update Procedure' : 'Save Procedure'}
             </Button>
             {editingId && (
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => {
                   setEditingId(null);
-                  setNewProcedure({ title: "", type: "Evacuation", steps: [""], assignedRole: "" });
+                  setNewProcedure({ title: '', type: 'Evacuation', steps: [''], assignedRole: '' });
                 }}
               >
                 Cancel
@@ -184,7 +188,7 @@ const EmergencyProcedures = () => {
       {procedures.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Emergency Procedures</h2>
-          {procedures.map((procedure) => (
+          {procedures.map(procedure => (
             <Card key={procedure.id}>
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -198,7 +202,11 @@ const EmergencyProcedures = () => {
                     <Button variant="outline" size="sm" onClick={() => editProcedure(procedure)}>
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => deleteProcedure(procedure.id)}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deleteProcedure(procedure.id)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

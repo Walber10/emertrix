@@ -1,11 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useNavigate, useParams } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EmergencyPlanSection = () => {
   const navigate = useNavigate();
   const { facilityId } = useParams();
-  
+
   return (
     <Card>
       <CardHeader>
@@ -16,7 +16,10 @@ const EmergencyPlanSection = () => {
           <p className="text-gray-600 mb-4">
             No emergency plan has been set up for this facility yet.
           </p>
-          <Button onClick={() => navigate(`/facility/${facilityId}/emergency-plan-setup`)} size="lg">
+          <Button
+            onClick={() => navigate(`/facility/${facilityId}/emergency-plan-setup`)}
+            size="lg"
+          >
             Set Up Emergency Plan
           </Button>
         </div>
