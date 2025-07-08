@@ -26,6 +26,7 @@ function userToSafeObject(user: any): SafeUser {
     isPointOfContact: user.isPointOfContact,
     inviteStatus: user.inviteStatus,
     createdAt: user.createdAt,
+    profilePicture: user?.profilePicture
   };
 }
 

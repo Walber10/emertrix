@@ -67,13 +67,24 @@ export function useOnboardingMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: OnboardingData) => {
-      const response = await api.post('/onboarding', data);
+    mutationFn: async (data: OnboardingData & { profilePictureFile?: File }) => {
+      const formData = new FormData();
+      if (data.profilePictureFile) {
+        formData.append('profilePicture', data.profilePictureFile);
+      }
+      // Remove the file from the data object before stringifying
+      const { profilePictureFile, ...rest } = data;
+      formData.append('data', JSON.stringify(rest));
+
+      const response = await api.post('/onboarding', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.organizations.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
     },
   });
 }

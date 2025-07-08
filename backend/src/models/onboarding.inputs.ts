@@ -16,12 +16,14 @@ export interface AdminInput {
   email: string;
   password: string;
   phone?: string;
+  profilePicture?: string;
 }
 
 export interface InvitedAdminInput {
   name: string;
   email: string;
   phone?: string;
+  profilePicture?: string;
 }
 
 export interface OnboardingInput {

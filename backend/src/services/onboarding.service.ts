@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { PlanTier, UserRole, InviteStatus } from '../enums/Enums';
 import { OnboardingSuccessResponse } from '../types';
-import { AdminInput, InvitedAdminInput, OnboardingInput } from '../models/onboarding.inputs';
+import {  InvitedAdminInput, OnboardingInput } from '../models/onboarding.inputs';
 
 export class OnboardingService {
   static async handleOnboarding(data: OnboardingInput): Promise<OnboardingSuccessResponse> {
@@ -55,6 +55,6 @@ export class OnboardingService {
       ]);
     }
 
-    return { organization: org, owner: adminUser, invitedAdmins: invitedAdminUsers };
+    return { organization: org, admin: adminUser, invitedAdmins: invitedAdminUsers };
   }
 }

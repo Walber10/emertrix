@@ -34,6 +34,7 @@ export const onboardingSchema = z.object({
       .string({ required_error: 'Password must be at least 6 characters long' })
       .min(6, 'Password must be at least 6 characters long'),
     phone: z.string().optional(),
+    profilePicture: z.string().optional(),
   }),
   invitedAdmins: z
     .array(
@@ -45,6 +46,7 @@ export const onboardingSchema = z.object({
           .string({ required_error: 'Please provide a valid email address' })
           .email('Please provide a valid email address'),
         phone: z.string().optional(),
+        profilePicture: z.string().optional(),
       }),
     )
     .optional(),

@@ -21,6 +21,7 @@ export interface IUser extends Document {
   isPointOfContact: boolean;
   inviteStatus: InviteStatus;
   createdAt: Date;
+  profilePicture?: string;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -33,6 +34,7 @@ const UserSchema = new Schema<IUser>({
   isPointOfContact: { type: Boolean, default: false },
   inviteStatus: { type: String, enum: Object.values(InviteStatus), default: InviteStatus.ACCEPTED },
   createdAt: { type: Date, default: Date.now },
+  profilePicture: { type: String },
 });
 
 export const User = mongoose.model<IUser>('User', UserSchema);

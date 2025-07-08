@@ -3,7 +3,7 @@ import { IUser } from '../models/user.model';
 
 export interface OnboardingSuccessResponse {
   organization: IOrganization;
-  owner: IUser;
+  admin: IUser;
   invitedAdmins: IUser[];
 }
 

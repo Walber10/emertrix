@@ -2,13 +2,11 @@ import React from 'react';
 
 interface EmertrixLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  showText?: boolean;
   className?: string;
 }
 
 export const EmertrixLogo: React.FC<EmertrixLogoProps> = ({
   size = 'md',
-  showText = true,
   className = '',
 }) => {
   const sizeClasses = {
@@ -32,9 +30,6 @@ export const EmertrixLogo: React.FC<EmertrixLogoProps> = ({
         alt="Emertrix Logo"
         className={`${sizeClasses[size]} w-auto`}
       />
-      {showText && (
-        <span className={`font-bold text-gray-900 ${textSizeClasses[size]}`}>EMERTRIX</span>
-      )}
     </div>
   );
 };

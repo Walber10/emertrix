@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import AccountSetup from '@/pages/AccountSetup';
-import PlanSelection from '@/pages/PlanSelection';
 import CreateFacility from '@/pages/CreateFacility';
 import FacilitySetup from '@/pages/FacilitySetup';
 import OrganizationDashboard from '@/pages/OrganizationDashboard';
@@ -50,23 +49,34 @@ function App() {
               <Toaster />
               <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/account-setup" element={<AccountSetup />} />
                 <Route path="/facility-setup" element={<FacilitySetup />} />
-                <Route path="/create-facility" element={<CreateFacility />} />
+                <Route
+                  path="/create-facility"
+                  element={
+                    <ProtectedRoute>
+                      <CreateFacility />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="/account-setup" element={<AccountSetup />} />
                 <Route
                   path="/people"
                   element={
-                    <Layout>
-                      <People />
-                    </Layout>
+                    <ProtectedRoute>
+                      <Layout>
+                        <People />
+                      </Layout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
                   path="/organization-dashboard"
                   element={
-                    <Layout>
-                      <OrganizationDashboard />
-                    </Layout>
+                    <ProtectedRoute>
+                      <Layout>
+                        <OrganizationDashboard />
+                      </Layout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route
@@ -80,9 +90,11 @@ function App() {
                 <Route
                   path="/facility/:facilityId"
                   element={
-                    <Layout>
-                      <FacilityDashboard />
-                    </Layout>
+                    <ProtectedRoute>
+                      <Layout>
+                        <FacilityDashboard />
+                      </Layout>
+                    </ProtectedRoute>
                   }
                 />
                 <Route

@@ -1,8 +1,8 @@
 import express, { Request, Response } from 'express';
-import { MasterAdminService } from '../services/masterAdmin.service';
 import { isAuth } from '../middleware/isAuth';
 import { requireMaster } from '../middleware/requireMaster';
 import { GetOrganizationsResponse, GetOrganizationsErrorResponse } from '../types';
+import { MasterAdminService } from '../services/master-admin.service';
 
 const router = express.Router();
 

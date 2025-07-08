@@ -14,10 +14,10 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 import { EmertrixLogo } from '@/components/EmertrixLogo';
-import { Users, BarChart3, BookOpen, Target } from 'lucide-react';
+import { Users, BarChart3, BookOpen, Target, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { useApp } from '@/contexts/AppContext';
-import { useOnboardingState } from '@/hooks/useOnboardingState';
+import { useContext } from 'react';
+import { AuthContext } from '@/contexts/auth-context';
 
 const dashboardItems = [
   {
@@ -50,16 +50,15 @@ const preparednessItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { appData } = useApp();
-  const { onboarding } = useOnboardingState();
+  const auth = useContext(AuthContext);
+  const user = auth?.user;
 
   const isActive = (url: string) => location.pathname === url;
 
-  // Get user data from onboarding state
-  const accountData = onboarding.account;
-  const userInitials = accountData ? `${accountData.name?.charAt(0) || ''}`.toUpperCase() : 'U';
-  const userName = accountData?.name || 'User';
-  const userRole = 'Safety Manager';
+  const userInitials = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
+  const userName = user?.name || 'User';
+  const userRole = user?.role === 'admin' ? 'Safety Manager' : user?.role || '';
+  const profilePicture = user?.profilePicture;
 
   return (
     <Sidebar>
@@ -127,14 +126,29 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-emertrix-gradient rounded-full flex items-center justify-center">
-            <span className="text-sm font-medium text-white">{userInitials}</span>
-          </div>
+          {profilePicture ? (
+            <img
+              src={profilePicture}
+              alt={userName}
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-8 h-8 bg-emertrix-gradient rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-white">{userInitials}</span>
+            </div>
+          )}
           <div className="flex-1">
             <p className="text-sm font-medium">{userName}</p>
             <p className="text-xs text-gray-500">{userRole}</p>
           </div>
         </div>
+        <button
+          onClick={auth?.logout}
+          className="mt-3 flex items-center gap-2 text-sm text-red-600 hover:text-red-800 transition-colors"
+        >
+          <LogOut className="h-4 w-4" />
+          Logout
+        </button>
       </SidebarFooter>
     </Sidebar>
   );

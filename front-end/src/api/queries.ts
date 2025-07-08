@@ -13,6 +13,7 @@ export interface User {
   isPointOfContact: boolean;
   inviteStatus: 'pending' | 'accepted';
   createdAt: string;
+  profilePicture?: string;
 }
 
 export interface LoginRequest {

@@ -166,6 +166,7 @@ const AccountSetup = () => {
     profilePicture: '',
     username: '',
   });
+  const [profilePictureFile, setProfilePictureFile] = useState<File | null>(null);
 
   const { submitOnboarding, loading, error, success } = useOnboarding();
 
@@ -183,6 +184,13 @@ const AccountSetup = () => {
       return;
     }
     setSelectedPlanLocal(planId);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setProfilePictureFile(e.target.files[0]);
+      updateFormData('profilePicture', e.target.files[0].name); // Optionally store file name
+    }
   };
 
   const addInvitedAdmin = () => {
@@ -348,8 +356,8 @@ const AccountSetup = () => {
         })),
       };
 
-      // Submit to backend
-      await submitOnboarding(onboardingData);
+      // Submit to backend with file
+      await submitOnboarding({ ...onboardingData, profilePictureFile });
 
       // Save to local state for navigation
       updateState({
@@ -441,7 +449,7 @@ const AccountSetup = () => {
       <div className="w-80 bg-[#0E093D] p-8 flex flex-col">
         {/* Logo */}
         <div className="mb-12">
-          <EmertrixLogo size="lg" showText={false} className="text-white" />
+          <EmertrixLogo size="lg" className="text-white" />
         </div>
 
         {/* Steps Navigation */}
@@ -698,7 +706,7 @@ const AccountSetup = () => {
                         id="profilePicture"
                         type="file"
                         accept="image/*"
-                        onChange={e => updateFormData('profilePicture', e.target.value)}
+                        onChange={handleFileChange}
                         className="mt-2 h-12 border-gray-300 focus:border-[#FF6500] focus:ring-[#FF6500]"
                       />
                     </div>

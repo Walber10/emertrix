@@ -9,6 +9,7 @@ export interface SafeUser {
   role: UserRole;
   isPointOfContact: boolean;
   inviteStatus: InviteStatus;
+  profilePicture?: string;
   createdAt: Date;
 }
 

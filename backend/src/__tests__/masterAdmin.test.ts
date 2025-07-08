@@ -5,7 +5,7 @@ import { User } from '../models/user.model';
 import { Organization } from '../models/organization.model';
 import { UserRole, InviteStatus } from '../models/user.model';
 import bcrypt from 'bcryptjs';
-import masterAdminRouter from '../routes/masterAdmin.routes';
+import masterAdminRouter from '../routes/master-admin.routes';
 
 const app = express();
 app.use(express.json());
