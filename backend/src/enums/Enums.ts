@@ -7,9 +7,8 @@ export enum PlanTier {
 }
 
 export enum UserRole {
-  OWNER = 'owner',
+  MASTER = 'master',
   ADMIN = 'admin',
-  POINT_OF_CONTACT = 'point-of-contact',
   OCCUPANT = 'occupant',
 }
 

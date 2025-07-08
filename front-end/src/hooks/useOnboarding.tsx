@@ -1,4 +1,5 @@
-import { useBackendHealth, useOnboardingMutation } from '../api/queries';
+import { useOnboardingMutation } from '@/api';
+import { useBackendHealth } from '../api/queries';
 
 export interface OnboardingData {
   organization: {
@@ -13,7 +14,7 @@ export interface OnboardingData {
     maxFacilities: number;
     totalSeats: number;
   };
-  owner: {
+  admin: {
     name: string;
     email: string;
     password: string;
@@ -40,7 +41,7 @@ export interface OnboardingResponse {
     abn?: string;
     maxFacilities: number;
     totalSeats: number;
-    ownerId?: string;
+    adminId?: string;
     createdAt: string;
   };
   owner: {

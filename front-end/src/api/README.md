@@ -1,15 +1,25 @@
 # React Query API Hooks
 
-This directory contains React Query hooks for managing server state in the frontend.
+This directory contains React Query hooks for managing server state in the frontend using axios for HTTP calls.
+
+## Structure
+
+- `api.ts` - Base axios configuration and interceptors
+- `auth.ts` - Auth API functions and types
+- `queries.ts` - All query hooks for reading data
+- `mutations.ts` - All mutation hooks for writing data
+- `index.ts` - Clean exports for all API functions
 
 ## Available Hooks
 
-### `useBackendHealth()`
+### Query Hooks (queries.ts)
+
+#### `useBackendHealth()`
 
 Checks if the backend is reachable and returns the response.
 
 ```tsx
-import { useBackendHealth } from './queries';
+import { useBackendHealth } from '@/api/queries';
 
 function MyComponent() {
   const { data, isLoading, error, isError } = useBackendHealth();
@@ -21,12 +31,12 @@ function MyComponent() {
 }
 ```
 
-### `useBackendStatus()`
+#### `useBackendStatus()`
 
 Simplified hook for checking backend connection status.
 
 ```tsx
-import { useBackendStatus } from './queries';
+import { useBackendStatus } from '@/api/queries';
 
 function ConnectionStatus() {
   const { isConnected, isLoading, error } = useBackendStatus();
@@ -37,12 +47,117 @@ function ConnectionStatus() {
 }
 ```
 
-### `useOnboardingMutation()`
+#### `useMeQuery()`
 
-Handles onboarding form submission with optimistic updates.
+Gets the current authenticated user.
 
 ```tsx
-import { useOnboardingMutation } from './queries';
+import { useMeQuery } from '@/api/queries';
+
+function UserProfile() {
+  const { data: user, isLoading, error } = useMeQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return <div>Welcome, {user.name}!</div>;
+}
+```
+
+#### Organization Queries
+
+```tsx
+import { useOrganizationsQuery, useOrganizationQuery } from '@/api/queries';
+
+// Get all organizations
+function OrganizationsList() {
+  const { data: organizations, isLoading } = useOrganizationsQuery();
+  // ...
+}
+
+// Get specific organization
+function OrganizationDetails({ id }: { id: string }) {
+  const { data: organization, isLoading } = useOrganizationQuery(id);
+  // ...
+}
+```
+
+#### User Queries
+
+```tsx
+import { useUsersQuery, useUserQuery } from '@/api/queries';
+
+// Get all users
+function UsersList() {
+  const { data: users, isLoading } = useUsersQuery();
+  // ...
+}
+
+// Get specific user
+function UserDetails({ id }: { id: string }) {
+  const { data: user, isLoading } = useUserQuery(id);
+  // ...
+}
+```
+
+#### Facility Queries
+
+```tsx
+import { useFacilitiesQuery, useFacilityQuery } from '@/api/queries';
+
+// Get all facilities
+function FacilitiesList() {
+  const { data: facilities, isLoading } = useFacilitiesQuery();
+  // ...
+}
+
+// Get specific facility
+function FacilityDetails({ id }: { id: string }) {
+  const { data: facility, isLoading } = useFacilityQuery(id);
+  // ...
+}
+```
+
+### Mutation Hooks (mutations.ts)
+
+#### Auth Mutations
+
+```tsx
+import { useLoginMutation, useLogoutMutation, useForgotPasswordMutation } from '@/api/mutations';
+
+function LoginForm() {
+  const loginMutation = useLoginMutation();
+
+  const handleSubmit = (email: string, password: string) => {
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {
+          console.log('Login successful');
+          // Navigate to dashboard
+        },
+        onError: error => {
+          console.error('Login failed:', error);
+        },
+      },
+    );
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* form fields */}
+      <button type="submit" disabled={loginMutation.isPending}>
+        {loginMutation.isPending ? 'Logging in...' : 'Login'}
+      </button>
+    </form>
+  );
+}
+```
+
+#### Onboarding Mutation
+
+```tsx
+import { useOnboardingMutation } from '@/api/mutations';
 
 function OnboardingForm() {
   const mutation = useOnboardingMutation();
@@ -71,50 +186,94 @@ function OnboardingForm() {
 }
 ```
 
-## Benefits of React Query
+#### CRUD Mutations
 
-1. **Automatic Caching**: Queries are cached and shared across components
-2. **Background Refetching**: Data stays fresh automatically
-3. **Optimistic Updates**: UI updates immediately, rolls back on error
-4. **Error Handling**: Built-in retry logic and error states
-5. **Loading States**: Easy access to loading, error, and success states
-6. **DevTools**: Built-in debugging tools (available in development)
+```tsx
+import {
+  useCreateOrganizationMutation,
+  useUpdateOrganizationMutation,
+  useDeleteOrganizationMutation,
+} from '@/api/mutations';
+
+function OrganizationForm() {
+  const createMutation = useCreateOrganizationMutation();
+  const updateMutation = useUpdateOrganizationMutation();
+  const deleteMutation = useDeleteOrganizationMutation();
+
+  const handleCreate = (data: OrganizationData) => {
+    createMutation.mutate(data);
+  };
+
+  const handleUpdate = (id: string, data: Partial<OrganizationData>) => {
+    updateMutation.mutate({ id, data });
+  };
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
+  };
+
+  // Similar patterns for users and facilities
+}
+```
+
+## Benefits of This Structure
+
+1. **Separation of Concerns**: Queries for reading, mutations for writing
+2. **Consistent Axios Usage**: All HTTP calls use axios with proper interceptors
+3. **Type Safety**: Full TypeScript support with proper interfaces
+4. **Automatic Caching**: Queries are cached and shared across components
+5. **Background Refetching**: Data stays fresh automatically
+6. **Optimistic Updates**: UI updates immediately, rolls back on error
+7. **Error Handling**: Built-in retry logic and error states
+8. **Loading States**: Easy access to loading, error, and success states
 
 ## Query Keys
 
-Query keys are used for caching and invalidation:
+Query keys are organized by domain:
 
 ```tsx
 export const queryKeys = {
   backend: ['backend'] as const,
-  onboarding: ['onboarding'] as const,
+  auth: {
+    me: ['auth', 'me'] as const,
+  },
+  organizations: {
+    all: ['organizations'] as const,
+    byId: (id: string) => ['organizations', id] as const,
+  },
+  users: {
+    all: ['users'] as const,
+    byId: (id: string) => ['users', id] as const,
+  },
+  facilities: {
+    all: ['facilities'] as const,
+    byId: (id: string) => ['facilities', id] as const,
+  },
 } as const;
 ```
 
-## Adding New Queries
+## Adding New Endpoints
 
 To add a new API endpoint:
 
-1. Add the API function to `api.ts`
-2. Add query key to `queryKeys`
-3. Create a hook in `queries.ts`
-4. Use the hook in your components
+1. Add the API function to the appropriate file (auth.ts for auth, or create a new file)
+2. Add query key to `queryKeys` in queries.ts
+3. Create a query hook in `queries.ts` for reading data
+4. Create a mutation hook in `mutations.ts` for writing data
+5. Export from `index.ts` for clean imports
 
-Example:
+## Usage Examples
 
 ```tsx
-// In api.ts
-export async function fetchUser(id: string) {
-  const response = await fetch(`/api/users/${id}`);
-  return response.json();
-}
+// Import from the main index
+import {
+  useMeQuery,
+  useLoginMutation,
+  useOrganizationsQuery,
+  useCreateOrganizationMutation,
+} from '@/api';
 
-// In queries.ts
-export function useUser(id: string) {
-  return useQuery({
-    queryKey: ['user', id],
-    queryFn: () => fetchUser(id),
-    enabled: !!id, // Only run if id exists
-  });
-}
+// Or import from specific files
+import { useMeQuery } from '@/api/queries';
+import { useLoginMutation } from '@/api/mutations';
 ```

@@ -1,24 +1,24 @@
-import type { OnboardingData } from '../hooks/useOnboarding';
+import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || '';
 
-export async function pingBackend() {
-  const response = await fetch(`${API_URL}/api/`);
-  if (!response.ok) {
-    throw new Error('Backend not reachable');
-  }
-  return response.json();
-}
+export const api = axios.create({
+  baseURL: `${API_URL}/api`,
+  withCredentials: true,
+});
 
-export async function submitOnboarding(data: OnboardingData) {
-  const response = await fetch(`${API_URL}/api/onboarding`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || error.message || 'Onboarding failed');
-  }
-  return response.json();
-}
+api.interceptors.request.use(config => {
+  return config;
+});
+
+api.interceptors.response.use(
+  response => response,
+  error => {
+    return Promise.reject(error);
+  },
+);
+
+export const pingBackend = async () => {
+  const response = await api.get('/');
+  return response.data;
+};

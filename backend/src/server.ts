@@ -3,8 +3,8 @@ import { connectToDatabase } from './database/connectToDB';
 import { createServer } from 'http';
 import { initSockets } from './sockets/socket';
 
-export function initServer() {
-  connectToDatabase();
+export async function initServer() {
+  await connectToDatabase();
   const httpServer = createServer(app);
   initSockets(httpServer);
   if (!process.env.PORT) {

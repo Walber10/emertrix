@@ -1,4 +1,7 @@
 export const corsOptions = {
-  origin: ['https://frontend-staging-a0e5.up.railway.app', 'http://localhost:8080'],
+  origin: (process.env.CORS_ORIGINS || process.env.FRONTEND_URL || 'http://localhost:8080')
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean),
   credentials: true,
 };

@@ -3,19 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Building2,
-  User,
-  Mail,
-  Lock,
-  MapPin,
-  Phone,
-  UserPlus,
-  Trash2,
-  Check,
-  ChevronRight,
-  ChevronLeft,
-} from 'lucide-react';
+import { Building2, User, UserPlus, Trash2, Check, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useApp } from '@/contexts/AppContext';
@@ -144,7 +132,6 @@ const getPlanLimits = (tier: string): { seats: number; facilities: number } => {
 const AccountSetup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { appData } = useApp();
   const { onboarding, updateState } = useOnboardingState();
   const [step, setStep] = useState(1);
   const [selectedPlanLocal, setSelectedPlanLocal] = useState<string | null>(
@@ -158,7 +145,6 @@ const AccountSetup = () => {
     jobTitle: '',
   });
   const [formData, setFormData] = useState<AccountSetupData>({
-    // Organization details
     organizationName: '',
     organizationType: '',
     industry: '',
@@ -170,8 +156,6 @@ const AccountSetup = () => {
     state: '',
     postcode: '',
     phone: '',
-
-    // User details
     firstName: '',
     lastName: '',
     email: '',
@@ -351,7 +335,7 @@ const AccountSetup = () => {
           maxFacilities: getPlanLimits(selectedPlanLocal || 'tier1').facilities,
           totalSeats: getPlanLimits(selectedPlanLocal || 'tier1').seats,
         },
-        owner: {
+        admin: {
           name: `${formData.firstName} ${formData.lastName}`,
           email: formData.email,
           password: formData.password,

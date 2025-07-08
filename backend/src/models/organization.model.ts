@@ -11,7 +11,7 @@ export interface IOrganization extends Document {
   selectedPlan: 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise';
   maxFacilities: number;
   totalSeats: number;
-  ownerId?: Types.ObjectId;
+  adminId?: Types.ObjectId;
   createdAt: Date;
 }
 
@@ -30,7 +30,7 @@ const OrganizationSchema = new Schema<IOrganization>({
   },
   maxFacilities: { type: Number, required: true },
   totalSeats: { type: Number, required: true },
-  ownerId: { type: Schema.Types.ObjectId, ref: 'User' },
+  adminId: { type: Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now },
 });
 

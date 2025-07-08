@@ -1,5 +1,3 @@
-// Core Types matching MongoDB schema structure
-
 export interface Organization {
   _id: string;
   name: string;
@@ -22,7 +20,7 @@ export interface User {
   email: string;
   phone: string;
   role: 'admin' | 'point-of-contact' | 'occupant';
-  facilityIds: string[]; // Assigned facilities
+  facilityIds: string[];
   createdAt: Date;
 }
 
@@ -47,7 +45,7 @@ export interface Facility {
   email?: string;
   maxOccupancy?: number;
   facilityType: string;
-  pointOfContactId: string; // User ID
+  pointOfContactId: string;
   assignedOccupantIds: string[];
   microsites: Microsite[];
   createdAt: Date;
@@ -61,7 +59,7 @@ export interface RiskAssessment {
 export interface EmergencyPlan {
   _id: string;
   facilityId: string;
-  procedureIds: string[]; // References to EmergencyProcedures
+  procedureIds: string[];
   riskAssessment: RiskAssessment;
   createdAt: Date;
 }
@@ -80,7 +78,7 @@ export interface TrainingCourse {
   facilityId: string;
   courseType: string;
   organiserName: string;
-  participants: string[]; // User IDs
+  participants: string[];
   status: 'scheduled' | 'in-progress' | 'completed';
   scheduledDate?: Date;
   createdAt: Date;
@@ -105,7 +103,7 @@ export interface ExerciseReview {
   exerciseId: string;
   completed: boolean;
   dateCompleted?: Date;
-  participants: string[]; // User IDs
+  participants: string[];
   reviewer: string;
   observations: string;
   emailSummaryTo?: string;

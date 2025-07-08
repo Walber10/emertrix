@@ -1,4 +1,3 @@
-
 export interface OrganizationInput {
   name: string;
   address: string;
@@ -12,7 +11,7 @@ export interface OrganizationInput {
   totalSeats: number;
 }
 
-export interface OwnerInput {
+export interface AdminInput {
   name: string;
   email: string;
   password: string;
@@ -27,7 +26,7 @@ export interface InvitedAdminInput {
 
 export interface OnboardingInput {
   organization: OrganizationInput;
-  owner: OwnerInput;
+  admin: AdminInput;
   invitedAdmins?: InvitedAdminInput[];
   stripeSessionId?: string;
-} 
+}

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { connectToDatabase } from '../database/connectToDB';
-import { Organization } from '../models/Organization';
-import { User } from '../models/User';
+import { Organization } from '../models/organization.model';
+import { User } from '../models/user.model';
 import { Types } from 'mongoose';
 
 async function main() {
@@ -22,23 +22,8 @@ async function main() {
     createdAt: new Date(),
   });
 
-  // Create owner user
-  const owner = await User.create({
-    organizationId: org._id,
-    name: 'Owner User',
-    email: 'owner@example.com',
-    phone: '123-456-7890',
-    role: 'owner',
-    inviteStatus: 'accepted',
-    createdAt: new Date(),
-  });
-
-  // Update organization with ownerId
-  org.ownerId = owner._id as Types.ObjectId;
-  await org.save();
-
   // Create admin user
-  await User.create({
+  const admin = await User.create({
     organizationId: org._id,
     name: 'Admin User',
     email: 'admin@example.com',
@@ -48,7 +33,22 @@ async function main() {
     createdAt: new Date(),
   });
 
-  console.log('Test organization, owner, and admin user created!');
+  // Update organization with adminId
+  org.adminId = admin._id as Types.ObjectId;
+  await org.save();
+
+  // Create additional admin user
+  await User.create({
+    organizationId: org._id,
+    name: 'Additional Admin User',
+    email: 'additional-admin@example.com',
+    phone: '123-456-7890',
+    role: 'admin',
+    inviteStatus: 'accepted',
+    createdAt: new Date(),
+  });
+
+  console.log('Test organization and admin users created!');
   process.exit(0);
 }
 
