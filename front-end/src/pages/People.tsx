@@ -37,7 +37,6 @@ const People = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingPerson, setEditingPerson] = useState<any>(null);
 
-  // Redirect to account setup if app is not initialized (no organization or plan limits)
   useEffect(() => {
     if (!appData.isInitialized || !appData.organization || appData.planLimits.seats === 0) {
       navigate('/account-setup');
@@ -48,7 +47,6 @@ const People = () => {
   const { users, facilities } = appData;
   const availableSeats = getAvailableSeats();
 
-  // Helper function to get facilities and microsites for a user
   const getUserAssignments = (userId: string) => {
     const userFacilities = facilities.filter(facility =>
       facility.assignedOccupantIds.includes(userId),
@@ -67,7 +65,6 @@ const People = () => {
     return assignments;
   };
 
-  // Filter and sort users
   const filteredPeople = users
     .filter(person => {
       const matchesSearch =
@@ -113,7 +110,6 @@ const People = () => {
     setEditingPerson(null);
   };
 
-  // Calculate metrics
   const metrics = {
     total: users.length,
     admins: users.filter(u => u.role === 'admin').length,
@@ -122,7 +118,6 @@ const People = () => {
     availableSeats: availableSeats,
   };
 
-  // Empty state component
   const EmptyPeopleState = () => (
     <Card className="text-center py-16">
       <CardContent>
@@ -150,7 +145,6 @@ const People = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">People Overview</h1>
@@ -174,7 +168,6 @@ const People = () => {
         <EmptyPeopleState />
       ) : (
         <>
-          {/* Overview Cards */}
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Card>
               <CardContent className="p-4">
@@ -243,7 +236,6 @@ const People = () => {
             </Card>
           </div>
 
-          {/* Search, Filter, and Sort Controls */}
           <Card>
             <CardContent className="p-4">
               <div className="flex flex-col md:flex-row gap-4">
@@ -283,7 +275,6 @@ const People = () => {
             </CardContent>
           </Card>
 
-          {/* People List */}
           <Card>
             <CardHeader>
               <CardTitle>People Directory</CardTitle>
@@ -338,7 +329,6 @@ const People = () => {
                                 </Badge>
                               </div>
 
-                              {/* Facility and Microsite Assignments */}
                               {assignments.length > 0 && (
                                 <div className="mt-3 space-y-2">
                                   <p className="text-sm font-medium text-gray-700">Assignments:</p>

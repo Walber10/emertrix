@@ -3,11 +3,13 @@ import React from 'react';
 interface EmertrixLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
+  variant?: 'black' | 'white';
 }
 
 export const EmertrixLogo: React.FC<EmertrixLogoProps> = ({
   size = 'md',
   className = '',
+  variant = 'black',
 }) => {
   const sizeClasses = {
     sm: 'h-6',
@@ -16,17 +18,15 @@ export const EmertrixLogo: React.FC<EmertrixLogoProps> = ({
     xl: 'h-16',
   };
 
-  const textSizeClasses = {
-    sm: 'text-lg',
-    md: 'text-xl',
-    lg: 'text-2xl',
-    xl: 'text-3xl',
-  };
+  const logoSrc =
+    variant === 'white'
+      ? '/src/assets/images/logo-white.svg'
+      : '/src/assets/images/logo-black.png';
 
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
       <img
-        src="/lovable-uploads/bb07afb4-8431-4e5f-b1e3-042aab5fa926.png"
+        src={logoSrc}
         alt="Emertrix Logo"
         className={`${sizeClasses[size]} w-auto`}
       />

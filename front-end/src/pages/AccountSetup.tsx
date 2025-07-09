@@ -6,7 +6,6 @@ import { Label } from '@/components/ui/label';
 import { Building2, User, UserPlus, Trash2, Check, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { useApp } from '@/contexts/AppContext';
 import { useOnboardingState } from '@/hooks/useOnboardingState';
 import { EmertrixLogo } from '@/components/EmertrixLogo';
 import { useOnboarding } from '@/hooks/useOnboarding';
@@ -20,7 +19,6 @@ interface InvitedAdmin {
 }
 
 interface AccountSetupData {
-  // Organization details
   organizationName: string;
   organizationType: string;
   industry: string;
@@ -32,8 +30,6 @@ interface AccountSetupData {
   state: string;
   postcode: string;
   phone: string;
-
-  // User details
   firstName: string;
   lastName: string;
   email: string;
@@ -264,7 +260,6 @@ const AccountSetup = () => {
         return;
       }
     } else if (step === 2) {
-      // User Setup validation
       const requiredUserFields = [
         { field: formData.firstName, name: 'First Name' },
         { field: formData.lastName, name: 'Last Name' },
@@ -295,7 +290,6 @@ const AccountSetup = () => {
         return;
       }
     } else if (step === 4) {
-      // Plan Selection validation
       if (!selectedPlanLocal) {
         toast({
           title: 'Plan Required',
@@ -304,7 +298,6 @@ const AccountSetup = () => {
         });
         return;
       }
-      // Update onboarding state with selected plan
       const limits = getPlanLimits(selectedPlanLocal);
       updateState({
         plan: {

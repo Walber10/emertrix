@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 const EpcSetup = () => {
   const navigate = useNavigate();
 
-  // Simulate no facility created yet - in real app this would come from state/API
   const hasFacility = false;
 
   if (!hasFacility) {

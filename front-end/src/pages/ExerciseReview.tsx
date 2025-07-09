@@ -43,7 +43,6 @@ const ExerciseReview = () => {
     emailSummaryTo: '',
   });
 
-  // Redirect to account setup if no data
   if (!appData.isInitialized || appData.facilities.length === 0) {
     navigate('/account-setup');
     return null;
@@ -86,7 +85,6 @@ const ExerciseReview = () => {
     }
 
     try {
-      // Add the exercise review
       addExerciseReview({
         exerciseId: exerciseId || '',
         completed: formData.completed,
@@ -97,7 +95,6 @@ const ExerciseReview = () => {
         emailSummaryTo: formData.emailSummaryTo,
       });
 
-      // Update exercise status if completed
       if (formData.completed && exerciseId && exercise) {
         updateExercise({ ...exercise, status: 'completed' });
       }

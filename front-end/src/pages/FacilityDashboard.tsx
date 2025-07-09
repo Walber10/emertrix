@@ -18,7 +18,6 @@ const FacilityDashboard = () => {
   const { facilityId } = useParams();
   const { appData, getUserById, removeOccupantFromFacility } = useApp();
 
-  // Redirect to account setup if app is not initialized (no organization or plan limits)
   useEffect(() => {
     if (!appData.isInitialized || !appData.organization || appData.planLimits.seats === 0) {
       navigate('/account-setup');
@@ -26,7 +25,6 @@ const FacilityDashboard = () => {
     }
   }, [appData.isInitialized, appData.organization, appData.planLimits.seats, navigate]);
 
-  // Find the facility by ID from the facilities array
   const facility = appData.facilities.find(f => f._id === facilityId);
 
   if (!facility) {
@@ -59,14 +57,12 @@ const FacilityDashboard = () => {
     );
   }
 
-  // Get assigned occupants - users that are assigned to this facility
   const assignedOccupants = facility.assignedOccupantIds
     .map(userId => getUserById(userId))
     .filter(Boolean);
 
   const occupantCount = assignedOccupants.length;
 
-  // Updated metrics to use actual assigned occupants
   const metrics = {
     currentOccupancy: occupantCount,
     compliancePercentage: 75,
@@ -78,7 +74,6 @@ const FacilityDashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
       <FacilityHeader
         facilityName={facility.name}
         facilityAddress={facility.address}
@@ -86,20 +81,16 @@ const FacilityDashboard = () => {
         facilityPhone={facility.phoneNumber}
       />
 
-      {/* Top Section - Facility Info, Compliance Status, Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <FacilityInfoCard facilityType={facility.facilityType} occupantCount={occupantCount} />
         <ComplianceStatusCard compliancePercentage={metrics.compliancePercentage} />
         <QuickActionsCard />
       </div>
 
-      {/* Emergency Plan Section */}
       <EmergencyPlanSection />
 
-      {/* Emergency Management Components Grid */}
       <EmergencyComponentsGrid />
 
-      {/* People / Occupants Section */}
       <PeopleOccupantsSection
         assignedOccupants={assignedOccupants}
         occupantCount={occupantCount}

@@ -9,7 +9,6 @@ const Facilities = () => {
   const navigate = useNavigate();
   const { appData, hasCompleted } = useApp();
 
-  // Redirect to account setup if not completed
   useEffect(() => {
     if (!hasCompleted('plan-selection') || !hasCompleted('account-setup')) {
       navigate('/account-setup');
@@ -36,7 +35,6 @@ const Facilities = () => {
     return 'text-red-600';
   };
 
-  // Empty state component
   const EmptyFacilitiesState = () => (
     <Card className="text-center py-16">
       <CardContent>
@@ -82,7 +80,7 @@ const Facilities = () => {
           {facilities.map(facility => {
             const currentOccupancy = facility.assignedOccupantIds.length;
             const maxOccupancy = facility.maxOccupancy || 0;
-            const status = 'Setup Required'; // Default status since facilities need setup
+            const status = 'Setup Required';
 
             return (
               <Card

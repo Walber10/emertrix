@@ -20,7 +20,6 @@ const ExerciseDetail = () => {
   const { appData, getExercisesByFacility, getFacilityById, getExerciseReviewByExerciseId } =
     useApp();
 
-  // Redirect to account setup if no data
   if (!appData.isInitialized || appData.facilities.length === 0) {
     navigate('/account-setup');
     return null;
