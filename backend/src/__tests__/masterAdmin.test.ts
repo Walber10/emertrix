@@ -1,9 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { User } from '../models/user.model';
-import { Organization } from '../models/organization.model';
-import { UserRole, InviteStatus } from '../models/user.model';
+import { prisma } from '../database/connectToDB';
+import { UserRole, InviteStatus, PlanTier } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import masterAdminRouter from '../routes/master-admin.routes';
 
@@ -21,53 +20,57 @@ describe('Master Admin Endpoints', () => {
   beforeEach(async () => {
     // Create a master admin
     const hashedPassword = await bcrypt.hash('master123', 10);
-    masterAdmin = await User.create({
-      organizationId: null,
-      name: 'Master Admin',
-      email: `master-${Date.now()}@test.com`,
-      phone: '123-456-7890',
-      password: hashedPassword,
-      role: UserRole.MASTER,
-      isPointOfContact: false,
-      inviteStatus: InviteStatus.ACCEPTED,
-      createdAt: new Date(),
+    masterAdmin = await prisma.user.create({
+      data: {
+        organizationId: null,
+        name: 'Master Admin',
+        email: `master-${Date.now()}@test.com`,
+        phone: '123-456-7890',
+        password: hashedPassword,
+        role: UserRole.MASTER,
+        isPointOfContact: false,
+        inviteStatus: InviteStatus.ACCEPTED,
+      },
     });
 
     // Create a test organization
-    testOrg = await Organization.create({
-      name: 'Test Organization',
-      address: '123 Test St',
-      phoneNumber: '123-456-7890',
-      industry: 'Technology',
-      organizationSize: '11-50',
-      selectedPlan: 'tier1',
-      maxFacilities: 5,
-      totalSeats: 100,
-      createdAt: new Date(),
+    testOrg = await prisma.organization.create({
+      data: {
+        name: 'Test Organization',
+        address: '123 Test St',
+        phoneNumber: '123-456-7890',
+        industry: 'Technology',
+        organizationSize: '11-50',
+        selectedPlan: PlanTier.TIER1,
+        maxFacilities: 5,
+        totalSeats: 100,
+      },
     });
 
     // Create a regular admin
     const adminPassword = await bcrypt.hash('admin123', 10);
-    regularAdmin = await User.create({
-      organizationId: testOrg._id,
-      name: 'Regular Admin',
-      email: `admin-${Date.now()}@test.com`,
-      phone: '123-456-7890',
-      password: adminPassword,
-      role: UserRole.ADMIN,
-      isPointOfContact: false,
-      inviteStatus: InviteStatus.ACCEPTED,
-      createdAt: new Date(),
+    regularAdmin = await prisma.user.create({
+      data: {
+        organizationId: testOrg.id,
+        name: 'Regular Admin',
+        email: `admin-${Date.now()}@test.com`,
+        phone: '123-456-7890',
+        password: adminPassword,
+        role: UserRole.ADMIN,
+        isPointOfContact: false,
+        inviteStatus: InviteStatus.ACCEPTED,
+      },
     });
 
     // Update organization with adminId
-    testOrg.adminId = regularAdmin._id;
-    await testOrg.save();
+    await prisma.organization.update({
+      where: { id: testOrg.id },
+      data: { adminId: regularAdmin.id },
+    });
   });
 
   describe('GET /master/organizations', () => {
     it('should return organizations when accessed by master admin', async () => {
-      // First, log in as master admin to get the cookie
       const loginResponse = await request(app).post('/auth/login').send({
         email: masterAdmin.email,
         password: 'master123',
@@ -78,7 +81,6 @@ describe('Master Admin Endpoints', () => {
       expect(cookies).toBeDefined();
       const cookieString = Array.isArray(cookies) ? cookies.join(';') : cookies;
 
-      // Now, access the protected endpoint with the cookie
       const response = await request(app).get('/master/organizations').set('Cookie', cookieString);
 
       expect(response.status).toBe(200);
@@ -94,7 +96,6 @@ describe('Master Admin Endpoints', () => {
     });
 
     it('should fail when accessed by regular admin', async () => {
-      // First, log in as regular admin to get the cookie
       const loginResponse = await request(app).post('/auth/login').send({
         email: regularAdmin.email,
         password: 'admin123',
@@ -105,7 +106,6 @@ describe('Master Admin Endpoints', () => {
       expect(cookies).toBeDefined();
       const cookieString = Array.isArray(cookies) ? cookies.join(';') : cookies;
 
-      // Now, access the protected endpoint with the cookie
       const response = await request(app).get('/master/organizations').set('Cookie', cookieString);
 
       expect(response.status).toBe(403);

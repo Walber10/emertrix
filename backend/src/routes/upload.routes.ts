@@ -34,8 +34,10 @@ router.post('/upload-profile-picture', upload.single('file'), async (req, res) =
     const data = await s3.upload(params).promise();
     res.json({ success: true, url: data.Location });
   } catch (err) {
-    res.status(500).json({ success: false, error: err instanceof Error ? err.message : 'Upload failed' });
+    res
+      .status(500)
+      .json({ success: false, error: err instanceof Error ? err.message : 'Upload failed' });
   }
 });
 
-export default router; 
+export default router;

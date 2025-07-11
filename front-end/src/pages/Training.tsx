@@ -33,7 +33,7 @@ const Training = () => {
 
   // Get all training courses across all facilities
   const allTrainingCourses = appData.facilities.flatMap(facility =>
-    getTrainingCoursesByFacility(facility._id).map(course => ({
+    getTrainingCoursesByFacility(facility.id).map(course => ({
       ...course,
       facility: facility,
     })),
@@ -53,7 +53,7 @@ const Training = () => {
 
   const handleBookTraining = () => {
     if (appData.facilities.length === 1) {
-      navigate(`/book-training/${appData.facilities[0]._id}`);
+      navigate(`/book-training/${appData.facilities[0].id}`);
     } else {
       navigate('/training-overview');
     }
@@ -138,7 +138,7 @@ const Training = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleViewCourse(course._id, course.facility._id)}
+                        onClick={() => handleViewCourse(course._id, course.facility.id)}
                       >
                         View / Edit
                       </Button>

@@ -7,7 +7,12 @@ const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
 });
 
-export async function uploadToS3(fileBuffer: Buffer, originalName: string, folder = 'profile-pictures', mimetype?: string): Promise<string> {
+export async function uploadToS3(
+  fileBuffer: Buffer,
+  originalName: string,
+  folder = 'profile-pictures',
+  mimetype?: string,
+): Promise<string> {
   const fileExt = originalName.split('.').pop();
   const key = `${folder}/${uuidv4()}.${fileExt}`;
 
@@ -20,4 +25,4 @@ export async function uploadToS3(fileBuffer: Buffer, originalName: string, folde
 
   const data = await s3.upload(params).promise();
   return data.Location;
-} 
+}

@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Building2, Users, MapPin, Plus, Settings, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAppContext } from '@/contexts/AppContext';
+import { useApp } from '@/contexts/AppContext';
 
 const OrganizationDashboard = () => {
   const navigate = useNavigate();
   const { appData, canCreateMoreFacilities, getTotalSeats, getUsedSeats, getMaxFacilities } =
-    useAppContext();
+    useApp();
 
   const handleCreateFacility = () => {
     navigate('/create-facility');
@@ -161,7 +161,7 @@ const OrganizationDashboard = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {appData.facilities.map(facility => (
                   <Card
-                    key={facility._id}
+                    key={facility.id}
                     className="cursor-pointer hover:shadow-md transition-shadow"
                   >
                     <CardHeader>
@@ -182,7 +182,7 @@ const OrganizationDashboard = () => {
                         </div>
                       </div>
                       <Button
-                        onClick={() => handleViewFacility(facility._id)}
+                        onClick={() => handleViewFacility(facility.id)}
                         className="w-full mt-4"
                         variant="outline"
                       >

@@ -1,16 +1,18 @@
+import { PlanTier } from '@prisma/client';
+
 export interface OrganizationWithUserCount {
-  _id: any;
+  id: string;
   name: string;
   address: string;
   phoneNumber: string;
   industry: string;
-  natureOfWork?: string;
-  abn?: string;
+  natureOfWork?: string | null;
+  abn?: string | null;
   organizationSize: string;
-  selectedPlan: 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise';
+  selectedPlan: PlanTier;
   maxFacilities: number;
   totalSeats: number;
-  adminId?: any;
+  adminId?: string | null;
   createdAt: Date;
   userCount: number;
 }

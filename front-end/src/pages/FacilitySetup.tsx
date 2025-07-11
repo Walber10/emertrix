@@ -29,6 +29,7 @@ import { useOnboardingState } from '@/hooks/useOnboardingState';
 import { EmertrixLogo } from '@/components/EmertrixLogo';
 import MicrositeDialog from '@/components/MicrositeDialog';
 import { AddPersonModal } from '@/components/AddPersonModal';
+import { UserRole } from '@/types';
 
 interface Microsite {
   id: string;
@@ -103,9 +104,8 @@ const FacilitySetup = () => {
     'Mixed Use Building',
     'Other',
   ];
-
   const allUsers = users.filter(
-    user => user.role === 'admin' || user.role === 'point-of-contact' || user.role === 'occupant',
+    user => user.role === UserRole.ADMIN || user.role === UserRole.OCCUPANT,
   );
 
   const planLimits = getSelectedPlanLimits();
@@ -308,15 +308,17 @@ const FacilitySetup = () => {
         state: facility.state,
         postcode: facility.postcode,
         phoneNumber: facility.facilityPhoneNumber,
-        email: facility.facilityPhoneNumber, // Using phone as fallback for now
+        email: facility.facilityPhoneNumber,
         facilityType: facility.facilityType,
         pointOfContactId: facility.facilityPointOfContact,
         assignedOccupantIds: facility.assignOccupants,
         microsites: facility.microsites,
-        organizationId: appData.organization?._id || '',
+        organizationId: appData.organization?.id || '',
       };
-
-      addFacility(facilityData);
+      addFacility({
+        ...facilityData,
+        id: facility.id.toString(),
+      });
     });
 
     const totalMicrosites = facilities.reduce((sum, f) => sum + f.microsites.length, 0);
@@ -597,9 +599,9 @@ const FacilitySetup = () => {
                           <SelectContent>
                             {allUsers.map(user => (
                               <SelectItem
-                                key={user._id}
-                                value={user._id}
-                                disabled={facility.assignOccupants.includes(user._id)}
+                                key={user.id}
+                                value={user.id}
+                                disabled={facility.assignOccupants.includes(user.id)}
                               >
                                 {user.name} ({user.role})
                               </SelectItem>
@@ -631,7 +633,7 @@ const FacilitySetup = () => {
                       <div className="space-y-3">
                         {facility.assignOccupants.map(userId => {
                           const user = getUserById(userId);
-                          const isPointOfContact = user?.role === 'point-of-contact';
+                          const isPointOfContact = user.isPointOfContact;
                           return (
                             <Card key={userId} className="bg-gray-50">
                               <CardContent className="pt-4">

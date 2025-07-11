@@ -1,5 +1,7 @@
 import { useOnboardingMutation } from '@/api';
 import { useBackendHealth } from '../api/queries';
+import { PlanTier } from '@/types';
+import { useState } from 'react';
 
 export interface OnboardingData {
   organization: {
@@ -8,7 +10,8 @@ export interface OnboardingData {
     phoneNumber: string;
     industry: string;
     organizationSize: string;
-    selectedPlan: 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise';
+    selectedPlan: PlanTier; // Updated to use enum instead of string literals
+    billingInterval: 'MONTHLY' | 'YEARLY';
     natureOfWork?: string;
     abn?: string;
     maxFacilities: number;
@@ -28,44 +31,6 @@ export interface OnboardingData {
   stripeSessionId?: string;
 }
 
-export interface OnboardingResponse {
-  organization: {
-    _id: string;
-    name: string;
-    address: string;
-    phoneNumber: string;
-    industry: string;
-    organizationSize: string;
-    selectedPlan: string;
-    natureOfWork?: string;
-    abn?: string;
-    maxFacilities: number;
-    totalSeats: number;
-    adminId?: string;
-    createdAt: string;
-  };
-  owner: {
-    _id: string;
-    name: string;
-    email: string;
-    phone?: string;
-    organizationId: string;
-    role: string;
-    inviteStatus: string;
-    createdAt: string;
-  };
-  invitedAdmins: Array<{
-    _id: string;
-    name: string;
-    email: string;
-    phone?: string;
-    organizationId: string;
-    role: string;
-    inviteStatus: string;
-    createdAt: string;
-  }>;
-}
-
 export function useTestBackend() {
   const { data, isLoading, error, isError } = useBackendHealth();
 
@@ -75,7 +40,7 @@ export function useTestBackend() {
   };
 }
 
-export function useOnboarding() {
+export const useOnboarding = () => {
   const mutation = useOnboardingMutation();
 
   return {
@@ -84,4 +49,4 @@ export function useOnboarding() {
     error: mutation.error?.message || null,
     success: mutation.data || null,
   };
-}
+};

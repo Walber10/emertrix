@@ -1,8 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { User } from '../models/user.model';
-import { UserRole, InviteStatus } from '../models/user.model';
+import { prisma } from '../database/connectToDB';
+import { UserRole, InviteStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import authRouter from '../routes/auth.routes';
 
@@ -21,16 +21,17 @@ describe('Auth Endpoints', () => {
 
     // Create a test user
     const hashedPassword = await bcrypt.hash('password123', 10);
-    testUser = await User.create({
-      organizationId: null, // Will be set after org creation
-      name: 'Test User',
-      email: testEmail,
-      phone: '123-456-7890',
-      password: hashedPassword,
-      role: UserRole.ADMIN,
-      isPointOfContact: false,
-      inviteStatus: InviteStatus.ACCEPTED,
-      createdAt: new Date(),
+    testUser = await prisma.user.create({
+      data: {
+        organizationId: null,
+        name: 'Test User',
+        email: testEmail,
+        phone: '123-456-7890',
+        password: hashedPassword,
+        role: UserRole.ADMIN,
+        isPointOfContact: false,
+        inviteStatus: InviteStatus.ACCEPTED,
+      },
     });
   });
 
@@ -109,7 +110,6 @@ describe('Auth Endpoints', () => {
         email: testEmail,
       });
 
-      // Accept both 200 and 404 for this test, depending on implementation
       expect([200, 404]).toContain(response.status);
       if (response.status === 200) {
         expect(response.body.success).toBe(true);
@@ -141,7 +141,6 @@ describe('Auth Endpoints', () => {
 
   describe('GET /auth/me', () => {
     it('should return user data when authenticated', async () => {
-      // First login to get a token
       const loginResponse = await request(app).post('/auth/login').send({
         email: testEmail,
         password: 'password123',

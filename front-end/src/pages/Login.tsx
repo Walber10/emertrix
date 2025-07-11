@@ -43,7 +43,7 @@ function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
         <div className="hidden md:flex flex-col justify-center items-center bg-[#0E093D] text-white w-1/2 p-12">
-          <EmertrixLogo size="lg"  />
+          <EmertrixLogo size="lg" />
           <h2 className="text-3xl font-bold mt-8 mb-4">Welcome to Emertrix</h2>
           <p className="text-lg mb-2">Set up your organization to get started.</p>
           <p className="text-sm text-gray-200">Emergency planning made easy and effective.</p>

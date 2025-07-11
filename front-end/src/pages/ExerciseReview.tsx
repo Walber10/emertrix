@@ -228,13 +228,13 @@ const ExerciseReview = () => {
               <Card className="p-4">
                 <div className="space-y-3 max-h-60 overflow-y-auto">
                   {facilityOccupants.map(user => (
-                    <div key={user._id} className="flex items-center space-x-2">
+                    <div key={user.id} className="flex items-center space-x-2">
                       <Checkbox
-                        id={user._id}
-                        checked={formData.participants.includes(user._id)}
-                        onCheckedChange={() => handleParticipantToggle(user._id)}
+                        id={user.id}
+                        checked={formData.participants.includes(user.id)}
+                        onCheckedChange={() => handleParticipantToggle(user.id)}
                       />
-                      <Label htmlFor={user._id} className="flex items-center gap-2 cursor-pointer">
+                      <Label htmlFor={user.id} className="flex items-center gap-2 cursor-pointer">
                         <Users className="h-4 w-4" />
                         {user.name} - {user.email}
                       </Label>
@@ -264,7 +264,7 @@ const ExerciseReview = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {facilityOccupants.map(user => (
-                    <SelectItem key={user._id} value={user.name}>
+                    <SelectItem key={user.id} value={user.name}>
                       {user.name}
                     </SelectItem>
                   ))}

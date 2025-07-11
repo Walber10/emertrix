@@ -19,17 +19,11 @@ export const EmertrixLogo: React.FC<EmertrixLogoProps> = ({
   };
 
   const logoSrc =
-    variant === 'white'
-      ? '/src/assets/images/logo-white.svg'
-      : '/src/assets/images/logo-black.png';
+    variant === 'white' ? '/src/assets/images/logo-white.svg' : '/src/assets/images/logo-black.png';
 
   return (
     <div className={`flex items-center space-x-2 ${className}`}>
-      <img
-        src={logoSrc}
-        alt="Emertrix Logo"
-        className={`${sizeClasses[size]} w-auto`}
-      />
+      <img src={logoSrc} alt="Emertrix Logo" className={`${sizeClasses[size]} w-auto`} />
     </div>
   );
 };

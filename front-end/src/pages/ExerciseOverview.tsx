@@ -20,24 +20,20 @@ const ExerciseOverview = () => {
   const { appData, getExercisesByFacility, getFacilityById } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Redirect to account setup if no data
   if (!appData.isInitialized || appData.facilities.length === 0) {
     navigate('/account-setup');
     return null;
   }
 
-  // Get organization name from context
   const organizationName = appData.organization?.name || 'Your Organization';
 
-  // Get all exercises across all facilities
   const allExercises = appData.facilities.flatMap(facility =>
-    getExercisesByFacility(facility._id).map(exercise => ({
+    getExercisesByFacility(facility.id).map(exercise => ({
       ...exercise,
       facility: facility,
     })),
   );
 
-  // Filter exercises based on search
   const filteredExercises = allExercises.filter(
     exercise =>
       exercise.exerciseType.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,11 +46,10 @@ const ExerciseOverview = () => {
   };
 
   const handleCreateExercise = () => {
-    // Navigate to create exercise, but we need to select a facility first
     if (appData.facilities.length === 1) {
-      navigate(`/create-exercise/${appData.facilities[0]._id}`);
+      navigate(`/create-exercise/${appData.facilities[0].id}`);
     } else {
-      navigate('/exercises'); // Go to main exercises page to select facility
+      navigate('/exercises');
     }
   };
 
@@ -133,7 +128,7 @@ const ExerciseOverview = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleViewExercise(exercise._id, exercise.facility._id)}
+                        onClick={() => handleViewExercise(exercise._id, exercise.facility.id)}
                       >
                         View / Edit
                       </Button>

@@ -20,6 +20,9 @@ export const onboardingSchema = z.object({
       [PlanTier.FREE, PlanTier.TIER1, PlanTier.TIER2, PlanTier.TIER3, PlanTier.ENTERPRISE],
       { required_error: 'Plan selection is required' },
     ),
+    billingInterval: z.enum(['MONTHLY', 'YEARLY'], {
+      required_error: 'Billing interval is required',
+    }),
     natureOfWork: z.string().optional(),
     abn: z.string().optional(),
     maxFacilities: z.number({ required_error: 'Maximum facilities count is required' }),

@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MASTER
+  ADMIN
+  OCCUPANT
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+}
+
+enum FacilityAccessLevel {
+  MANAGER
+  VIEWER
+}
+
+enum PlanTier {
+  FREE
+  TIER1
+  TIER2
+  TIER3
+  ENTERPRISE
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model Organization {
+  id               String    @id @default(uuid())
+  name             String
+  address          String
+  phoneNumber      String    @map("phone_number")
+  industry         String
+  natureOfWork     String?   @map("nature_of_work")
+  abn              String?
+  organizationSize String    @map("organization_size")
+  selectedPlan     PlanTier  @map("selected_plan")
+  maxFacilities    Int       @map("max_facilities")
+  totalSeats       Int       @map("total_seats")
+  adminId          String?   @unique @map("admin_id")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @default(now()) @map("updated_at")
+  
+  // Relations
+  admin            User?     @relation("OrganizationAdmin", fields: [adminId], references: [id])
+  users            User[]    @relation("OrganizationUsers")
+  payments         Payment[]
+  facilities       Facility[]
+  
+  @@map("organizations")
+}
+
+model User {
+  id                   String      @id @default(uuid())
+  organizationId       String?     @map("organization_id")
+  name                 String
+  email                String      @unique
+  phone                String?
+  password             String?
+  role                 UserRole
+  isPointOfContact     Boolean     @default(false) @map("is_point_of_contact")
+  inviteStatus         InviteStatus @default(ACCEPTED) @map("invite_status")
+  createdAt            DateTime    @default(now()) @map("created_at")
+  updatedAt            DateTime    @updatedAt @default(now()) @map("updated_at")
+  deletedAt            DateTime?   @map("deleted_at")
+  profilePicture       String?     @map("profile_picture")
+  inviteToken          String?     @unique @map("invite_token")
+  inviteTokenExpires   DateTime?   @map("invite_token_expires")
+  passwordResetToken   String?     @unique @map("password_reset_token")
+  passwordResetExpires DateTime?   @map("password_reset_expires")
+  emergencyPlanRoleAssignments EmergencyPlanRoleAssignment[] @relation("UserEmergencyPlanRoleAssignments")
+  
+  // Relations
+  organization         Organization? @relation("OrganizationUsers", fields: [organizationId], references: [id])
+  adminOfOrganization  Organization? @relation("OrganizationAdmin")
+  payments             Payment[]
+  facilityAccesses     FacilityAccess[]
+  
+  @@index([email])
+  @@index([organizationId])
+  @@map("users")
+}
+
+model Payment {
+  id               String        @id @default(uuid())
+  organizationId   String        @map("organization_id")
+  userId           String        @map("user_id")
+  plan             PlanTier
+  amount           Float
+  currency         String        @default("AUD")
+  status           PaymentStatus
+  stripeSessionId  String?       @map("stripe_session_id")
+  stripePaymentId  String?       @map("stripe_payment_id")
+  description      String?
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @default(now()) @map("updated_at")
+  
+  // Relations
+  organization     Organization  @relation(fields: [organizationId], references: [id])
+  user             User          @relation(fields: [userId], references: [id])
+  
+  @@index([organizationId])
+  @@index([status])
+  @@map("payments")
+}
+
+model FacilityAccess {
+  id               String              @id @default(uuid())
+  userId           String              @map("user_id")
+  facilityId       String              @map("facility_id")
+  accessLevel      FacilityAccessLevel @map("access_level")
+  isPointOfContact Boolean             @default(false) @map("is_point_of_contact")
+  
+  // Relations
+  user             User                @relation(fields: [userId], references: [id])
+  facility         Facility?           @relation(fields: [facilityId], references: [id])
+  
+  @@unique([userId, facilityId])
+  @@index([facilityId])
+  @@index([userId])
+  @@map("facility_accesses")
+}
+
+model Facility {
+  id               String    @id @default(uuid())
+  organizationId   String    @map("organization_id")
+  name             String
+  address          String?
+  description      String?
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @default(now()) @map("updated_at")
+  
+  // Relations
+  organization     Organization @relation(fields: [organizationId], references: [id])
+  facilityAccesses FacilityAccess[]
+  emergencyPlans   EmergencyPlan[]
+  
+  @@map("facilities")
+}
+
+model EmergencyPlan {
+  id             String    @id @default(uuid())
+  facilityId     String    @map("facility_id")
+  version        Int
+  status         String    // e.g. "Compliant", "Partially Compliant", "Not Compliant"
+  approvalDate   DateTime?
+  reviewDate     DateTime?
+  isArchived     Boolean   @default(false)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @default(now()) @map("updated_at")
+
+  // Relations
+  facility       Facility  @relation(fields: [facilityId], references: [id])
+  steps          EmergencyPlanStep[]
+  roleAssignments EmergencyPlanRoleAssignment[]
+
+  @@unique([facilityId, version])
+  @@map("emergency_plans")
+}
+
+model EmergencyPlanStep {
+  id               String         @id @default(uuid())
+  emergencyPlanId  String         @map("emergency_plan_id")
+  stepType         String         // e.g. "PLANNING_TEAM", "FOUNDATION", etc.
+  data             Json           // Flexible, can store roles, assignments, text, etc.
+  order            Int            // For ordering steps
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @default(now()) @map("updated_at")
+
+  // Relations
+  emergencyPlan    EmergencyPlan  @relation(fields: [emergencyPlanId], references: [id])
+
+  @@unique([emergencyPlanId, stepType])
+  @@map("emergency_plan_steps")
+}
+
+model EmergencyPlanRoleAssignment {
+  id               String         @id @default(uuid())
+  emergencyPlanId  String         @map("emergency_plan_id")
+  stepType         String         // e.g. "EPC", "ECO"
+  roleName         String         // e.g. "EPC Chair", "Chief Warden"
+  userId           String?        @map("user_id")
+  observerName     String?        // For external observers
+  trained          Boolean?       // For compliance tracking
+  createdAt        DateTime       @default(now()) @map("created_at")
+
+  // Relations
+  emergencyPlan    EmergencyPlan  @relation(fields: [emergencyPlanId], references: [id])
+  user             User?          @relation("UserEmergencyPlanRoleAssignments", fields: [userId], references: [id])
+
+  @@map("emergency_plan_role_assignments")
+}

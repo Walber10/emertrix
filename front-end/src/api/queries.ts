@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from './api';
 import type { OnboardingData } from '../hooks/useOnboarding';
 
-// Auth types moved from auth.ts
 export interface User {
   _id: string;
   organizationId: string;
@@ -33,7 +32,6 @@ export interface MeResponse {
   error?: string;
 }
 
-// Auth API functions moved from auth.ts
 export const authApi = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>('/auth/login', data);
@@ -51,6 +49,26 @@ export const authApi = {
 
   forgotPassword: async (email: string): Promise<{ message: string }> => {
     const response = await api.post<{ message: string }>('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  resetPassword: async (data: {
+    token: string;
+    password: string;
+  }): Promise<{ message: string }> => {
+    const response = await api.post<{ message: string }>('/auth/reset-password', data);
+    return response.data;
+  },
+
+  validateResetToken: async (token: string): Promise<{ valid: boolean; email?: string }> => {
+    const response = await api.get<{ valid: boolean; email?: string }>(
+      `/auth/validate-reset-token/${token}`,
+    );
+    return response.data;
+  },
+
+  acceptInvite: async (data: { token: string; password: string }): Promise<LoginResponse> => {
+    const response = await api.post<LoginResponse>('/auth/accept-invite', data);
     return response.data;
   },
 };

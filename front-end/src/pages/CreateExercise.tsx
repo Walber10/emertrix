@@ -266,7 +266,7 @@ const CreateExercise = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {availableUsers.map(user => (
-                    <SelectItem key={user._id} value={user.name}>
+                    <SelectItem key={user.id} value={user.name}>
                       {user.name} - {user.role}
                     </SelectItem>
                   ))}

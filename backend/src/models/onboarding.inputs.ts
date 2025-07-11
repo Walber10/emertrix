@@ -1,3 +1,5 @@
+import { PlanTier } from '@prisma/client';
+
 export interface OrganizationInput {
   name: string;
   address: string;
@@ -6,7 +8,8 @@ export interface OrganizationInput {
   natureOfWork?: string;
   abn?: string;
   organizationSize: string;
-  selectedPlan: 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise';
+  selectedPlan: PlanTier;
+  billingInterval: 'MONTHLY' | 'YEARLY';
   maxFacilities: number;
   totalSeats: number;
 }
@@ -15,15 +18,15 @@ export interface AdminInput {
   name: string;
   email: string;
   password: string;
-  phone?: string;
-  profilePicture?: string;
+  phone?: string | null;
+  profilePicture?: string | null;
 }
 
 export interface InvitedAdminInput {
   name: string;
   email: string;
-  phone?: string;
-  profilePicture?: string;
+  phone?: string | null;
+  profilePicture?: string | null;
 }
 
 export interface OnboardingInput {

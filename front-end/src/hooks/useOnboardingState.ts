@@ -49,7 +49,7 @@ export const useOnboardingState = () => {
     (tier: string, billing: 'monthly' | 'annual' = 'annual') => {
       const limits = getPlanLimits(tier);
       const plan: PlanSelection = {
-        tier: tier as any,
+        tier: tier as 'tier1' | 'tier2' | 'tier3' | 'enterprise',
         seats: limits.seats,
         facilities: limits.facilities,
         billing,

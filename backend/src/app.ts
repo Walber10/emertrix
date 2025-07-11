@@ -4,10 +4,13 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { corsOptions } from './configuration/corsOptions';
 import router from './routes/router';
-import testEmailRouter from './routes/test-email.routes';
 import uploadRouter from './routes/upload.routes';
+import { stripeWebhookRouter } from './routes/stripe-webhook.routes';
 
 export const app = express();
+
+// Handle Stripe webhook BEFORE JSON parsing middleware
+app.use('/api/stripe/webhook', stripeWebhookRouter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,5 +23,4 @@ app.use((req, res, next) => {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use('/api', router);
-app.use('/api', testEmailRouter);
 app.use('/api', uploadRouter);

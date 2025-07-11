@@ -25,7 +25,7 @@ const FacilityDashboard = () => {
     }
   }, [appData.isInitialized, appData.organization, appData.planLimits.seats, navigate]);
 
-  const facility = appData.facilities.find(f => f._id === facilityId);
+  const facility = appData.facilities.find(f => f.id === facilityId);
 
   if (!facility) {
     return (
@@ -69,7 +69,7 @@ const FacilityDashboard = () => {
   };
 
   const handleRemoveOccupant = (userId: string) => {
-    removeOccupantFromFacility(facility._id, userId);
+    removeOccupantFromFacility(facility.id, userId);
   };
 
   return (

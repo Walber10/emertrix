@@ -1,17 +1,28 @@
-import mongoose from 'mongoose';
+import { PrismaClient } from '@prisma/client';
+
+declare global {
+  var __prisma: PrismaClient | undefined;
+}
+
+// Prevent multiple instances of Prisma Client in development
+export const prisma = global.__prisma || new PrismaClient();
+
+if (process.env.NODE_ENV === 'development') {
+  global.__prisma = prisma;
+}
 
 /**
  * @function connectToDatabase
- * @description Connects to the MongoDB database using the URI specified in environment variables.
+ * @description Connects to the PostgreSQL database using Prisma.
  * @returns {Promise<void>} A promise that resolves when the connection is established.
  */
 export const connectToDatabase = async () => {
-  if (!process.env.MONG_URI) {
-    throw new Error('Please specify the MongoDB URI in the .env file.');
+  if (!process.env.DATABASE_URL) {
+    throw new Error('Please specify the DATABASE_URL in the .env file.');
   }
 
   try {
-    await mongoose.connect(process.env.MONG_URI);
+    await prisma.$connect();
     console.log('Connected to the database 🧰');
   } catch (err) {
     console.error('Error connecting to the database: ', err);
@@ -20,5 +31,5 @@ export const connectToDatabase = async () => {
 };
 
 export const disconnectFromDatabase = async () => {
-  await mongoose.disconnect();
+  await prisma.$disconnect();
 };

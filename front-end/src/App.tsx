@@ -2,14 +2,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import AccountSetup from '@/pages/AccountSetup';
-import CreateFacility from '@/pages/CreateFacility';
 import FacilitySetup from '@/pages/FacilitySetup';
 import OrganizationDashboard from '@/pages/OrganizationDashboard';
 import FacilityDashboard from '@/pages/FacilityDashboard';
 import People from '@/pages/People';
-import EmergencyPlan from '@/pages/EmergencyPlan';
-import EmergencyPlanSetup from '@/pages/EmergencyPlanSetup';
-import RiskAssessmentSetup from '@/pages/RiskAssessmentSetup';
 import Training from '@/pages/Training';
 import TrainingOverview from '@/pages/TrainingOverview';
 import TrainingCourseDetail from '@/pages/TrainingCourseDetail';
@@ -24,40 +20,26 @@ import { ProtectedRoute, MasterOnly } from '@/components/ProtectedRoute';
 import MasterAdmin from '@/pages/MasterAdmin';
 import Login from '@/pages/Login';
 import { AuthProvider } from '@/contexts/AuthContext';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
-    },
-    mutations: {
-      retry: 1,
-    },
-  },
-});
+import AcceptInvite from '@/pages/AcceptInvite';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
+import PaymentSuccess from '@/pages/PaymentSuccess';
+import PaymentFailed from '@/pages/PaymentFailed';
 
 function App() {
+  const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <AppProvider>
-        <AuthProvider>
-          <BrowserRouter>
+      <BrowserRouter>
+        <AppProvider>
+          <AuthProvider>
             <div className="min-h-screen bg-background font-sans antialiased">
               <Toaster />
               <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/facility-setup" element={<FacilitySetup />} />
-                <Route
-                  path="/create-facility"
-                  element={
-                    <ProtectedRoute>
-                      <CreateFacility />
-                    </ProtectedRoute>
-                  }
-                />
                 <Route path="/account-setup" element={<AccountSetup />} />
                 <Route
                   path="/people"
@@ -97,30 +79,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                <Route
-                  path="/emergency-plan"
-                  element={
-                    <Layout>
-                      <EmergencyPlan />
-                    </Layout>
-                  }
-                />
-                <Route
-                  path="/emergency-plan-setup"
-                  element={
-                    <Layout>
-                      <EmergencyPlanSetup />
-                    </Layout>
-                  }
-                />
-                <Route
-                  path="/risk-assessment-setup"
-                  element={
-                    <Layout>
-                      <RiskAssessmentSetup />
-                    </Layout>
-                  }
-                />
+
                 <Route
                   path="/training"
                   element={
@@ -193,12 +152,15 @@ function App() {
                     </Layout>
                   }
                 />
+                <Route path="/accept-invite" element={<AcceptInvite />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-failed" element={<PaymentFailed />} />
                 <Route path="/" element={<Login />} />
               </Routes>
             </div>
-          </BrowserRouter>
-        </AuthProvider>
-      </AppProvider>
+          </AuthProvider>
+        </AppProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   );
 }

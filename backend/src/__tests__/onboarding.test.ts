@@ -1,8 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { Organization } from '../models/organization.model';
-import { User } from '../models/user.model';
+import { prisma } from '../database/connectToDB';
 import { onboardingRouter } from '../routes/onboarding.routes';
 
 const app = express();
@@ -20,7 +19,7 @@ describe('Onboarding Endpoints', () => {
           phoneNumber: '123-456-7890',
           industry: 'Technology',
           organizationSize: '11-50',
-          selectedPlan: 'tier1',
+          selectedPlan: 'TIER1',
           maxFacilities: 5,
           totalSeats: 100,
         },
@@ -45,19 +44,23 @@ describe('Onboarding Endpoints', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data).toBeDefined();
       expect(response.body.data.organization).toBeDefined();
-      expect(response.body.data.owner).toBeDefined();
+      expect(response.body.data.admin).toBeDefined();
       expect(response.body.data.invitedAdmins).toBeDefined();
 
       // Verify organization was created
-      const org = await Organization.findById(response.body.data.organization._id);
+      const org = await prisma.organization.findUnique({
+        where: { id: response.body.data.organization.id },
+      });
       expect(org).toBeDefined();
       expect(org?.name).toBe('Test Organization');
 
       // Verify admin was created
-      const admin = await User.findById(response.body.data.owner._id);
+      const admin = await prisma.user.findUnique({
+        where: { id: response.body.data.admin.id },
+      });
       expect(admin).toBeDefined();
       expect(admin?.email).toBe('admin@test.com');
-      expect(admin?.role).toBe('admin');
+      expect(admin?.role).toBe('ADMIN');
     });
 
     it('should fail with missing organization name', async () => {
@@ -67,7 +70,7 @@ describe('Onboarding Endpoints', () => {
           phoneNumber: '123-456-7890',
           industry: 'Technology',
           organizationSize: '11-50',
-          selectedPlan: 'tier1',
+          selectedPlan: 'TIER1',
           maxFacilities: 5,
           totalSeats: 100,
         },
@@ -93,7 +96,7 @@ describe('Onboarding Endpoints', () => {
           phoneNumber: '123-456-7890',
           industry: 'Technology',
           organizationSize: '11-50',
-          selectedPlan: 'tier1',
+          selectedPlan: 'TIER1',
           maxFacilities: 5,
           totalSeats: 100,
         },
@@ -118,7 +121,7 @@ describe('Onboarding Endpoints', () => {
           phoneNumber: '123-456-7890',
           industry: 'Technology',
           organizationSize: '11-50',
-          selectedPlan: 'tier1',
+          selectedPlan: 'TIER1',
           maxFacilities: 5,
           totalSeats: 100,
         },
@@ -144,7 +147,7 @@ describe('Onboarding Endpoints', () => {
           phoneNumber: '123-456-7890',
           industry: 'Technology',
           organizationSize: '11-50',
-          selectedPlan: 'tier1',
+          selectedPlan: 'TIER1',
           maxFacilities: 5,
           totalSeats: 100,
         },
@@ -196,7 +199,7 @@ describe('Onboarding Endpoints', () => {
           phoneNumber: '123-456-7890',
           industry: 'Technology',
           organizationSize: '11-50',
-          selectedPlan: 'free',
+          selectedPlan: 'FREE',
           maxFacilities: 1,
           totalSeats: 10,
         },

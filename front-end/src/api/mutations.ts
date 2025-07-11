@@ -1,42 +1,20 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, UseMutationOptions } from '@tanstack/react-query';
 import { api } from './api';
-import { authApi, LoginRequest } from './queries';
+import { authApi, LoginRequest, LoginResponse } from './queries'; // Import LoginResponse from queries
 import { queryKeys } from './queries';
-import type { OnboardingData } from '../hooks/useOnboarding';
+import { useNavigate } from 'react-router-dom';
 
-export interface OrganizationData {
-  name: string;
-  address: string;
-  phoneNumber: string;
-  industry: string;
-  natureOfWork?: string;
-  abn?: string;
-  organizationSize: string;
-  selectedPlan: 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise';
-  maxFacilities: number;
-  totalSeats: number;
-}
-
-export interface UserData {
-  name: string;
-  email: string;
-  password?: string;
-  phone?: string;
-  role: 'master' | 'admin' | 'occupant';
-  isPointOfContact?: boolean;
-}
-
-export interface FacilityData {
-  name: string;
-  address: string;
-  type: string;
-  capacity: number;
-  organizationId: string;
-}
+import type {
+  OnboardingData,
+  CreateUserData,
+  UpdateUserData,
+  CreateFacilityData,
+  UpdateFacilityData,
+  LoginResponse as MutationLoginResponse,
+} from '@/types';
 
 export function useLoginMutation() {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
     onSuccess: () => {
@@ -47,12 +25,14 @@ export function useLoginMutation() {
 
 export function useLogoutMutation() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: authApi.logout,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
       queryClient.clear();
+      navigate('/login', { replace: true });
     },
   });
 }
@@ -65,6 +45,7 @@ export function useForgotPasswordMutation() {
 
 export function useOnboardingMutation() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (data: OnboardingData & { profilePictureFile?: File }) => {
@@ -72,28 +53,32 @@ export function useOnboardingMutation() {
       if (data.profilePictureFile) {
         formData.append('profilePicture', data.profilePictureFile);
       }
-      // Remove the file from the data object before stringifying
       const { profilePictureFile, ...rest } = data;
       formData.append('data', JSON.stringify(rest));
 
       const response = await api.post('/onboarding', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      return response.data;
+      return response.data.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.organizations.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.users.all });
-      queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
+    onSuccess: data => {
+      if (data?.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
+      }
+      // For free plans, continue onboarding flow
+      navigate('/facility-setup');
+      queryClient.invalidateQueries({ queryKey: ['organizations'] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['auth', 'me'] });
     },
   });
 }
 
 export function useCreateUserMutation() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async (data: UserData) => {
+    mutationFn: async (data: CreateUserData) => {
       const response = await api.post('/master/users', data);
       return response.data;
     },
@@ -105,9 +90,8 @@ export function useCreateUserMutation() {
 
 export function useUpdateUserMutation() {
   const queryClient = useQueryClient();
-
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<UserData> }) => {
+    mutationFn: async ({ id, data }: { id: string; data: UpdateUserData }) => {
       const response = await api.put(`/master/users/${id}`, data);
       return response.data;
     },
@@ -136,7 +120,7 @@ export function useCreateFacilityMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: FacilityData) => {
+    mutationFn: async (data: CreateFacilityData) => {
       const response = await api.post('/facilities', data);
       return response.data;
     },
@@ -150,7 +134,7 @@ export function useUpdateFacilityMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Partial<FacilityData> }) => {
+    mutationFn: async ({ id, data }: { id: string; data: UpdateFacilityData }) => {
       const response = await api.put(`/facilities/${id}`, data);
       return response.data;
     },
@@ -172,6 +156,34 @@ export function useDeleteFacilityMutation() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.facilities.all });
     },
+  });
+}
+
+export function useAcceptInviteMutation(
+  options?: UseMutationOptions<LoginResponse, Error, { token: string; password: string }>,
+) {
+  return useMutation<LoginResponse, Error, { token: string; password: string }>({
+    mutationFn: (data: { token: string; password: string }) => authApi.acceptInvite(data),
+    ...options,
+  });
+}
+
+export function useResetPasswordMutation() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (data: { token: string; password: string }) => authApi.resetPassword(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.me });
+      navigate('/login', { replace: true });
+    },
+  });
+}
+
+export function useValidateResetTokenMutation() {
+  return useMutation({
+    mutationFn: (token: string) => authApi.validateResetToken(token),
   });
 }
 

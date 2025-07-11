@@ -159,7 +159,7 @@ const ExerciseDetail = () => {
                     </TableRow>
                   ) : (
                     exerciseReview.participants.map(participantId => {
-                      const participant = appData.users.find(u => u._id === participantId);
+                      const participant = appData.users.find(u => u.id === participantId);
                       return participant ? (
                         <TableRow key={participantId}>
                           <TableCell>{participant.name}</TableCell>

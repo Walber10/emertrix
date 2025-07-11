@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -22,17 +21,16 @@ const BookTraining = () => {
   const { appData, addTrainingCourse, getFacilityById, getUsersByRole, getUserById } = useApp();
   const { toast } = useToast();
 
-  // Redirect to account setup if no data
-  if (!appData.isInitialized || appData.facilities.length === 0) {
-    navigate('/account-setup');
-    return null;
-  }
-
   const [formData, setFormData] = useState({
     courseType: '',
     organiserName: '',
     participants: [] as string[],
   });
+
+  if (!appData.isInitialized || appData.facilities.length === 0) {
+    navigate('/account-setup');
+    return null;
+  }
 
   const facility = getFacilityById(facilityId || '');
   const availableUsers = getUsersByRole('occupant').concat(getUsersByRole('point-of-contact'));
@@ -76,7 +74,7 @@ const BookTraining = () => {
         participants: formData.participants,
         status: 'scheduled',
         facilityId: facilityId || '',
-        organizationId: appData.organization?._id || '',
+        organizationId: appData.organization?.id || '',
       });
 
       toast({
@@ -158,7 +156,7 @@ const BookTraining = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {availableUsers.map(user => (
-                    <SelectItem key={user._id} value={user.name}>
+                    <SelectItem key={user.id} value={user.name}>
                       {user.name} - {user.role}
                     </SelectItem>
                   ))}
@@ -171,13 +169,13 @@ const BookTraining = () => {
               <Card className="p-4">
                 <div className="space-y-3 max-h-60 overflow-y-auto">
                   {facilityOccupants.map(user => (
-                    <div key={user._id} className="flex items-center space-x-2">
+                    <div key={user.id} className="flex items-center space-x-2">
                       <Checkbox
-                        id={user._id}
-                        checked={formData.participants.includes(user._id)}
-                        onCheckedChange={() => handleParticipantToggle(user._id)}
+                        id={user.id}
+                        checked={formData.participants.includes(user.id)}
+                        onCheckedChange={() => handleParticipantToggle(user.id)}
                       />
-                      <Label htmlFor={user._id} className="flex items-center gap-2 cursor-pointer">
+                      <Label htmlFor={user.id} className="flex items-center gap-2 cursor-pointer">
                         <Users className="h-4 w-4" />
                         {user.name} - {user.email}
                       </Label>

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../configuration/auth';
-import { User } from '../models/user.model';
+import { prisma } from '../database/connectToDB';
 
 export async function isAuth(req: Request, res: Response, next: NextFunction) {
   const token = req.cookies?.token;
@@ -9,7 +9,9 @@ export async function isAuth(req: Request, res: Response, next: NextFunction) {
   }
   try {
     const payload = verifyToken(token) as any;
-    const user = await User.findById(payload.userId);
+    const user = await prisma.user.findUnique({
+      where: { id: payload.userId },
+    });
     if (!user) {
       return res.status(401).json({ success: false, error: 'User not found' });
     }

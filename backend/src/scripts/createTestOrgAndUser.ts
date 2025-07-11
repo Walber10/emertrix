@@ -1,58 +1,63 @@
-import 'dotenv/config';
-import { connectToDatabase } from '../database/connectToDB';
-import { Organization } from '../models/organization.model';
-import { User } from '../models/user.model';
-import { Types } from 'mongoose';
+import { prisma } from '../database/connectToDB';
+import { UserRole, InviteStatus, PlanTier } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
-async function main() {
-  await connectToDatabase();
-
+async function createTestOrgAndUser() {
   // Create organization
-  const org = await Organization.create({
-    name: 'Test Org',
-    address: '123 Main St',
-    phoneNumber: '123-456-7890',
-    industry: 'Technology',
-    natureOfWork: 'Software Development',
-    abn: '12345678901',
-    organizationSize: '11-50',
-    selectedPlan: 'tier1',
-    maxFacilities: 1,
-    totalSeats: 50,
-    createdAt: new Date(),
+  const org = await prisma.organization.create({
+    data: {
+      name: 'Test Organization',
+      address: '123 Test St',
+      phoneNumber: '123-456-7890',
+      industry: 'Technology',
+      organizationSize: '11-50',
+      selectedPlan: PlanTier.TIER1,
+      maxFacilities: 5,
+      totalSeats: 100,
+    },
   });
+
+  console.log('Organization created:', org.name);
 
   // Create admin user
-  const admin = await User.create({
-    organizationId: org._id,
-    name: 'Admin User',
-    email: 'admin@example.com',
-    phone: '123-456-7890',
-    role: 'admin',
-    inviteStatus: 'accepted',
-    createdAt: new Date(),
+  const hashedPassword = await bcrypt.hash('admin123', 10);
+  const admin = await prisma.user.create({
+    data: {
+      organizationId: org.id,
+      name: 'Test Admin',
+      email: 'admin@test.com',
+      phone: '123-456-7890',
+      password: hashedPassword,
+      role: UserRole.ADMIN,
+      isPointOfContact: true,
+      inviteStatus: InviteStatus.ACCEPTED,
+    },
   });
 
-  // Update organization with adminId
-  org.adminId = admin._id as Types.ObjectId;
-  await org.save();
+  console.log('Admin created:', admin.email);
 
-  // Create additional admin user
-  await User.create({
-    organizationId: org._id,
-    name: 'Additional Admin User',
-    email: 'additional-admin@example.com',
-    phone: '123-456-7890',
-    role: 'admin',
-    inviteStatus: 'accepted',
-    createdAt: new Date(),
+  // Update organization with admin ID
+  await prisma.organization.update({
+    where: { id: org.id },
+    data: { adminId: admin.id },
   });
 
-  console.log('Test organization and admin users created!');
-  process.exit(0);
+  // Create regular user
+  const userPassword = await bcrypt.hash('user123', 10);
+  const user = await prisma.user.create({
+    data: {
+      organizationId: org.id,
+      name: 'Test User',
+      email: 'user@test.com',
+      phone: '123-456-7890',
+      password: userPassword,
+      role: UserRole.OCCUPANT,
+      isPointOfContact: false,
+      inviteStatus: InviteStatus.ACCEPTED,
+    },
+  });
+
+  console.log('User created:', user.email);
 }
 
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
+createTestOrgAndUser().catch(console.error);

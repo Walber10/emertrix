@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { AddPersonModal } from '@/components/AddPersonModal';
 import { EditPersonModal } from '@/components/EditPersonModal';
+import { User, UserRole } from '@/types';
 
 const People = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const People = () => {
   const [sortBy, setSortBy] = useState('name');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingPerson, setEditingPerson] = useState<any>(null);
+  const [editingPerson, setEditingPerson] = useState<UserRole | null>(null);
 
   useEffect(() => {
     if (!appData.isInitialized || !appData.organization || appData.planLimits.seats === 0) {
@@ -99,8 +100,7 @@ const People = () => {
   const handleDeleteUser = (id: string) => {
     removeUser(id);
   };
-
-  const handleEditUser = (person: any) => {
+  const handleEditUser = (person: UserRole) => {
     setEditingPerson(person);
     setIsEditModalOpen(true);
   };
@@ -112,9 +112,9 @@ const People = () => {
 
   const metrics = {
     total: users.length,
-    admins: users.filter(u => u.role === 'admin').length,
-    pointsOfContact: users.filter(u => u.role === 'point-of-contact').length,
-    occupants: users.filter(u => u.role === 'occupant').length,
+    admins: users.filter(u => u.role === UserRole.ADMIN).length,
+    pointsOfContact: users.filter(u => u.isPointOfContact),
+    occupants: users.filter(u => u.role === UserRole.OCCUPANT).length,
     availableSeats: availableSeats,
   };
 
@@ -202,7 +202,7 @@ const People = () => {
                     <span className="text-sm font-bold text-blue-600">P</span>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">{metrics.pointsOfContact}</p>
+                    <p className="text-2xl font-bold">{metrics.pointsOfContact.length}</p>
                     <p className="text-sm text-gray-600">Points of Contact</p>
                   </div>
                 </div>
@@ -293,11 +293,11 @@ const People = () => {
                   </div>
                 ) : (
                   filteredPeople.map(person => {
-                    const assignments = getUserAssignments(person._id);
+                    const assignments = getUserAssignments(person.id);
 
                     return (
                       <div
-                        key={person._id}
+                        key={person.id}
                         className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
                       >
                         <div className="flex items-start justify-between">
@@ -334,7 +334,7 @@ const People = () => {
                                   <p className="text-sm font-medium text-gray-700">Assignments:</p>
                                   {assignments.map(assignment => (
                                     <div
-                                      key={assignment.facility._id}
+                                      key={assignment.facility.id}
                                       className="pl-2 border-l-2 border-blue-200"
                                     >
                                       <div className="flex items-center space-x-2 text-sm">
@@ -369,7 +369,7 @@ const People = () => {
                             <Button
                               size="sm"
                               variant="ghost"
-                              onClick={() => handleEditUser(person)}
+                              onClick={() => handleEditUser(person as unknown as UserRole)}
                             >
                               <Edit className="h-4 w-4" />
                             </Button>
@@ -377,7 +377,7 @@ const People = () => {
                               size="sm"
                               variant="ghost"
                               className="text-red-600 hover:text-red-700"
-                              onClick={() => handleDeleteUser(person._id)}
+                              onClick={() => handleDeleteUser(person.id)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -401,7 +401,7 @@ const People = () => {
       <EditPersonModal
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
-        person={editingPerson}
+        person={editingPerson as unknown as User}
       />
     </div>
   );

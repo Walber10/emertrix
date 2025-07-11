@@ -3,166 +3,54 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Building2, User, UserPlus, Trash2, Check, ChevronRight, ChevronLeft } from 'lucide-react';
+import {
+  Building2,
+  User,
+  UserPlus,
+  Trash2,
+  Check,
+  ChevronRight,
+  ChevronLeft,
+  Loader2,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useOnboardingState } from '@/hooks/useOnboardingState';
 import { EmertrixLogo } from '@/components/EmertrixLogo';
 import { useOnboarding } from '@/hooks/useOnboarding';
-
-interface InvitedAdmin {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  jobTitle: string;
-}
-
-interface AccountSetupData {
-  organizationName: string;
-  organizationType: string;
-  industry: string;
-  natureOfWork: string;
-  abn: string;
-  organizationSize: string;
-  address: string;
-  city: string;
-  state: string;
-  postcode: string;
-  phone: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  jobTitle: string;
-  userPhone: string;
-  profilePicture?: string;
-  username: string;
-}
-
-const plans = [
-  {
-    id: 'tier1',
-    name: 'Tier 1',
-    price: '$1899',
-    period: ' (annual) / $190 (monthly)',
-    description: 'Perfect for small facilities',
-    inclusions: ['1 x facility', '50 x occupants'],
-    addOns: 'No ability to add extra facilities or occupants',
-    popular: false,
-  },
-  {
-    id: 'tier2',
-    name: 'Tier 2',
-    price: '$2999',
-    period: ' (annual) / $299 (monthly)',
-    description: 'Ideal for growing organizations',
-    inclusions: ['1 x facility', '100 x occupants'],
-    addOns: 'Can add additional facilities or occupants at set prices',
-    popular: true,
-  },
-  {
-    id: 'tier3',
-    name: 'Tier 3',
-    price: '$4999',
-    period: ' (annual) / $499 (monthly)',
-    description: 'For larger organizations',
-    inclusions: ['2 x facility', '300 x occupants'],
-    addOns: 'Can add additional facilities or occupants at set prices',
-    popular: false,
-  },
-  {
-    id: 'enterprise',
-    name: 'Call Us',
-    price: 'Custom',
-    period: ' Invoiced Pricing',
-    description: 'For clients wanting more than 5 facilities and/or 500 occupants',
-    inclusions: ['5+ facilities', '500+ occupants', 'Custom configuration', 'Dedicated support'],
-    addOns: 'Fully customizable pricing structure',
-    popular: false,
-  },
-];
-
-const industries = [
-  'Aged Care & Disability Services',
-  'Childcare & Early Learning',
-  'Education & Training',
-  'Retail & Hospitality',
-  'Healthcare & Medical',
-  'Construction & Trades',
-  'Manufacturing & Warehousing',
-  'Transport & Logistics',
-  'Government & Public Services',
-  'Emergency Services & Defence',
-  'Corporate & Professional Services',
-  'Real Estate & Property Management',
-  'Community & Not-for-Profit',
-  'Mining, Resources & Energy',
-  'Technology & Software',
-  'Finance & Insurance',
-  'Agriculture & Farming',
-  'Utilities & Infrastructure',
-  'Tourism & Events',
-  'Cleaning & Facility Services',
-  'Other',
-];
-
-const organizationSizes = ['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+'];
-
-const getPlanLimits = (tier: string): { seats: number; facilities: number } => {
-  switch (tier) {
-    case 'tier1':
-      return { seats: 50, facilities: 1 };
-    case 'tier2':
-      return { seats: 100, facilities: 1 };
-    case 'tier3':
-      return { seats: 300, facilities: 2 };
-    case 'enterprise':
-      return { seats: 500, facilities: 5 };
-    default:
-      return { seats: 0, facilities: 0 };
-  }
-};
+import { mapPlanToEnum, UserRole, AccountSetupData, InvitedAdmin } from '@/types';
+import {
+  AccountSetupStep,
+  DEFAULT_ACCOUNT_SETUP_DATA,
+  DEFAULT_INVITE_DATA,
+  plans,
+  industries,
+  organizationSizes,
+  getPlanLimits,
+  getStepTitle,
+  getStepDescription,
+  isLastStep,
+  canGoBack,
+  validateStep1Fields,
+  validateStep2Fields,
+  validatePasswordMatch,
+  validateInviteFields,
+  checkDuplicateEmail,
+} from '@/utils/account-setup.utils';
 
 const AccountSetup = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { onboarding, updateState } = useOnboardingState();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState<AccountSetupStep>(AccountSetupStep.ORGANIZATION_DETAILS);
   const [selectedPlanLocal, setSelectedPlanLocal] = useState<string | null>(
     onboarding.plan?.tier || null,
   );
   const [invitedAdmins, setInvitedAdmins] = useState<InvitedAdmin[]>([]);
-  const [currentInvite, setCurrentInvite] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    jobTitle: '',
-  });
-  const [formData, setFormData] = useState<AccountSetupData>({
-    organizationName: '',
-    organizationType: '',
-    industry: '',
-    natureOfWork: '',
-    abn: '',
-    organizationSize: '',
-    address: '',
-    city: '',
-    state: '',
-    postcode: '',
-    phone: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    jobTitle: '',
-    userPhone: '',
-    profilePicture: '',
-    username: '',
-  });
+  const [currentInvite, setCurrentInvite] = useState(DEFAULT_INVITE_DATA);
+  const [formData, setFormData] = useState<AccountSetupData>(DEFAULT_ACCOUNT_SETUP_DATA);
   const [profilePictureFile, setProfilePictureFile] = useState<File | null>(null);
+  const [billingInterval, setBillingInterval] = useState<'MONTHLY' | 'YEARLY'>('YEARLY');
 
   const { submitOnboarding, loading, error, success } = useOnboarding();
 
@@ -185,21 +73,22 @@ const AccountSetup = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setProfilePictureFile(e.target.files[0]);
-      updateFormData('profilePicture', e.target.files[0].name); // Optionally store file name
+      updateFormData('profilePicture', e.target.files[0].name);
     }
   };
 
   const addInvitedAdmin = () => {
-    if (!currentInvite.firstName || !currentInvite.lastName || !currentInvite.email) {
+    const validationError = validateInviteFields(currentInvite);
+    if (validationError) {
       toast({
         title: 'Missing Information',
-        description: 'Please fill in first name, last name, and email for the admin',
+        description: validationError,
         variant: 'destructive',
       });
       return;
     }
 
-    if (invitedAdmins.some(admin => admin.email === currentInvite.email)) {
+    if (checkDuplicateEmail(currentInvite.email, invitedAdmins)) {
       toast({
         title: 'Duplicate Email',
         description: 'An admin with this email has already been invited',
@@ -214,13 +103,7 @@ const AccountSetup = () => {
     };
 
     setInvitedAdmins(prev => [...prev, newAdmin]);
-    setCurrentInvite({
-      firstName: '',
-      lastName: '',
-      email: '',
-      jobTitle: '',
-    });
-
+    setCurrentInvite(DEFAULT_INVITE_DATA);
     toast({
       title: 'Admin Added',
       description: `${newAdmin.firstName} ${newAdmin.lastName} will be invited upon account creation`,
@@ -236,20 +119,8 @@ const AccountSetup = () => {
   };
 
   const handleNextStep = () => {
-    if (step === 1) {
-      // Organization Setup validation
-      const requiredFields = [
-        { field: formData.organizationName, name: 'Organization Name' },
-        { field: formData.address, name: 'Address' },
-        { field: formData.phone, name: 'Phone Number' },
-        { field: formData.industry, name: 'Industry' },
-        { field: formData.organizationSize, name: 'Organization Size' },
-      ];
-
-      const missingFields = requiredFields.filter(
-        field => !field.field || field.field.trim() === '',
-      );
-
+    if (step === AccountSetupStep.ORGANIZATION_DETAILS) {
+      const missingFields = validateStep1Fields(formData);
       if (missingFields.length > 0) {
         const missingFieldNames = missingFields.map(field => field.name).join(', ');
         toast({
@@ -259,18 +130,8 @@ const AccountSetup = () => {
         });
         return;
       }
-    } else if (step === 2) {
-      const requiredUserFields = [
-        { field: formData.firstName, name: 'First Name' },
-        { field: formData.lastName, name: 'Last Name' },
-        { field: formData.email, name: 'Email' },
-        { field: formData.password, name: 'Password' },
-      ];
-
-      const missingUserFields = requiredUserFields.filter(
-        field => !field.field || field.field.trim() === '',
-      );
-
+    } else if (step === AccountSetupStep.USER_DETAILS) {
+      const missingUserFields = validateStep2Fields(formData);
       if (missingUserFields.length > 0) {
         const missingFieldNames = missingUserFields.map(field => field.name).join(', ');
         toast({
@@ -281,7 +142,7 @@ const AccountSetup = () => {
         return;
       }
 
-      if (formData.password !== formData.confirmPassword) {
+      if (!validatePasswordMatch(formData.password, formData.confirmPassword)) {
         toast({
           title: 'Password Mismatch',
           description: 'Passwords do not match',
@@ -289,7 +150,7 @@ const AccountSetup = () => {
         });
         return;
       }
-    } else if (step === 4) {
+    } else if (step === AccountSetupStep.PLAN_SELECTION) {
       if (!selectedPlanLocal) {
         toast({
           title: 'Plan Required',
@@ -309,20 +170,19 @@ const AccountSetup = () => {
       });
     }
 
-    if (step < 5) {
+    if (!isLastStep(step)) {
       setStep(step + 1);
     }
   };
 
   const handlePreviousStep = () => {
-    if (step > 1) {
+    if (canGoBack(step)) {
       setStep(step - 1);
     }
   };
 
   const handleComplete = async () => {
     try {
-      // Prepare onboarding data for backend
       const onboardingData = {
         organization: {
           name: formData.organizationName,
@@ -332,7 +192,8 @@ const AccountSetup = () => {
           natureOfWork: formData.natureOfWork,
           abn: formData.abn,
           organizationSize: formData.organizationSize,
-          selectedPlan: selectedPlanLocal as 'free' | 'tier1' | 'tier2' | 'tier3' | 'enterprise',
+          selectedPlan: mapPlanToEnum(selectedPlanLocal || 'tier1'),
+          billingInterval,
           maxFacilities: getPlanLimits(selectedPlanLocal || 'tier1').facilities,
           totalSeats: getPlanLimits(selectedPlanLocal || 'tier1').seats,
         },
@@ -341,18 +202,18 @@ const AccountSetup = () => {
           email: formData.email,
           password: formData.password,
           phone: formData.userPhone,
+          role: UserRole.ADMIN,
         },
         invitedAdmins: invitedAdmins.map(admin => ({
           name: `${admin.firstName} ${admin.lastName}`,
           email: admin.email,
-          phone: '', // Add phone field if needed
+          phone: '',
+          role: UserRole.ADMIN,
         })),
       };
 
-      // Submit to backend with file
       await submitOnboarding({ ...onboardingData, profilePictureFile });
 
-      // Save to local state for navigation
       updateState({
         organization: {
           name: formData.organizationName,
@@ -383,8 +244,6 @@ const AccountSetup = () => {
         title: 'Account Created Successfully',
         description: 'Welcome to the Emergency Planning System!',
       });
-
-      navigate('/facility-setup');
     } catch (err) {
       toast({
         title: 'Error Creating Account',
@@ -395,57 +254,24 @@ const AccountSetup = () => {
   };
 
   const steps = [
-    { number: 1, title: 'Organisation Details', icon: Building2 },
-    { number: 2, title: 'User Details', icon: User },
-    { number: 3, title: 'Invite Additional Admins', icon: UserPlus },
-    { number: 4, title: 'Plan Selection', icon: Building2 },
-    { number: 5, title: 'Review & Confirm', icon: Check },
+    {
+      number: AccountSetupStep.ORGANIZATION_DETAILS,
+      title: 'Organisation Details',
+      icon: Building2,
+    },
+    { number: AccountSetupStep.USER_DETAILS, title: 'User Details', icon: User },
+    { number: AccountSetupStep.INVITE_ADMINS, title: 'Invite Additional Admins', icon: UserPlus },
+    { number: AccountSetupStep.PLAN_SELECTION, title: 'Plan Selection', icon: Building2 },
+    { number: AccountSetupStep.REVIEW_CONFIRM, title: 'Review & Confirm', icon: Check },
   ];
-
-  const getStepTitle = () => {
-    switch (step) {
-      case 1:
-        return 'Organisation Details';
-      case 2:
-        return 'User Details';
-      case 3:
-        return 'Invite Additional Admins';
-      case 4:
-        return 'Select Your Plan';
-      case 5:
-        return 'Review & Confirm';
-      default:
-        return '';
-    }
-  };
-
-  const getStepDescription = () => {
-    switch (step) {
-      case 1:
-        return "Provide your organisation's details to set up its primary account.";
-      case 2:
-        return 'User setup captures the details of the primary account holder and assigns them as the default admin for the organisation.';
-      case 3:
-        return 'Optional functionality to add and invite additional admin users during setup.';
-      case 4:
-        return "Choose the plan that best fits your organization's needs";
-      case 5:
-        return 'Please review your information before completing setup.';
-      default:
-        return '';
-    }
-  };
 
   return (
     <div className="min-h-screen flex bg-white font-poppins">
-      {/* Left Sidebar */}
       <div className="w-80 bg-[#0E093D] p-8 flex flex-col">
-        {/* Logo */}
         <div className="mb-12">
-          <EmertrixLogo size="lg" className="text-white" />
+          <EmertrixLogo size="lg" className="text-white" variant="white" />
         </div>
 
-        {/* Steps Navigation */}
         <div className="flex-1">
           <h2 className="text-white text-xl font-semibold mb-8">Account Setup</h2>
           <nav className="space-y-4">
@@ -486,15 +312,15 @@ const AccountSetup = () => {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl text-[#0E093D] mb-2">{getStepTitle()}</h1>
-            <p className="text-lg text-slate-600">{getStepDescription()}</p>
+            <h1 className="text-3xl text-[#0E093D] mb-2">{getStepTitle(step)}</h1>
+            <p className="text-lg text-slate-600">{getStepDescription(step)}</p>
           </div>
 
           {/* Content Card */}
           <Card className="border-0">
             <CardContent className="p-8">
               {/* Step 1: Organisation Details */}
-              {step === 1 && (
+              {step === AccountSetupStep.ORGANIZATION_DETAILS && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="md:col-span-2">
@@ -598,7 +424,7 @@ const AccountSetup = () => {
               )}
 
               {/* Step 2: User Details */}
-              {step === 2 && (
+              {step === AccountSetupStep.USER_DETAILS && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -708,7 +534,7 @@ const AccountSetup = () => {
               )}
 
               {/* Step 3: Invite Admins */}
-              {step === 3 && (
+              {step === AccountSetupStep.INVITE_ADMINS && (
                 <div className="space-y-8">
                   <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 space-y-6 bg-gray-50">
                     <h4 className="font-semibold text-lg text-[#0E093D]">Add New Admin</h4>
@@ -830,7 +656,7 @@ const AccountSetup = () => {
               )}
 
               {/* Step 4: Plan Selection */}
-              {step === 4 && (
+              {step === AccountSetupStep.PLAN_SELECTION && (
                 <div className="grid grid-cols-4 gap-6 max-w-5xl mx-auto">
                   {plans.map(plan => (
                     <Card
@@ -928,7 +754,7 @@ const AccountSetup = () => {
               )}
 
               {/* Step 5: Review & Confirm */}
-              {step === 5 && (
+              {step === AccountSetupStep.REVIEW_CONFIRM && (
                 <div className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="p-6 bg-orange-50 rounded-xl border border-orange-200">
@@ -984,14 +810,14 @@ const AccountSetup = () => {
             <Button
               variant="ghost"
               onClick={handlePreviousStep}
-              disabled={step === 1}
+              disabled={!canGoBack(step)}
               className="px-8 h-12 text-gray-600 hover:bg-gray-100"
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Go Back
             </Button>
             <div className="flex gap-4">
-              {step === 3 && (
+              {step === AccountSetupStep.INVITE_ADMINS && (
                 <Button
                   variant="ghost"
                   onClick={handleNextStep}
@@ -1001,11 +827,22 @@ const AccountSetup = () => {
                 </Button>
               )}
               <Button
-                onClick={step === 5 ? handleComplete : handleNextStep}
+                onClick={isLastStep(step) ? handleComplete : handleNextStep}
                 disabled={loading}
                 className="px-8 h-12 bg-[#FF6500] hover:bg-[#FF6500]/90 text-white"
               >
-                {step === 5 ? (loading ? 'Creating Account...' : 'Complete Setup') : 'Continue'}
+                {isLastStep(step) ? (
+                  loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Creating Account...
+                    </>
+                  ) : (
+                    'Complete Setup'
+                  )
+                ) : (
+                  'Continue'
+                )}
               </Button>
             </div>
           </div>
