@@ -84,9 +84,9 @@ const Facilities = () => {
 
             return (
               <Card
-                key={facility._id}
+                key={facility.id}
                 className="hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-blue-500"
-                onClick={() => navigate(`/facility/${facility._id}`)}
+                onClick={() => navigate(`/facility/${facility.id}`)}
               >
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
