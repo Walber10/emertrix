@@ -63,7 +63,7 @@ const ResetPassword = () => {
     };
 
     validateToken();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, navigate, toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {

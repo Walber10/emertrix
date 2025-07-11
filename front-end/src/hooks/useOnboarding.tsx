@@ -10,7 +10,7 @@ export interface OnboardingData {
     phoneNumber: string;
     industry: string;
     organizationSize: string;
-    selectedPlan: PlanTier; 
+    selectedPlan: PlanTier;
     billingInterval: 'MONTHLY' | 'YEARLY';
     natureOfWork?: string;
     abn?: string;

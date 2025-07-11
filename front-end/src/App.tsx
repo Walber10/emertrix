@@ -16,7 +16,7 @@ import CreateExercise from '@/pages/CreateExercise';
 import ExerciseReview from '@/pages/ExerciseReview';
 import { AppProvider } from '@/contexts/AppContext';
 import { Layout } from '@/components/Layout';
-import { ProtectedRoute, MasterOnly } from '@/components/ProtectedRoute';
+import { ProtectedRoute, MasterOnly, NonMasterOnly } from '@/components/ProtectedRoute';
 import MasterAdmin from '@/pages/MasterAdmin';
 import Login from '@/pages/Login';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -44,21 +44,11 @@ function App() {
                 <Route
                   path="/people"
                   element={
-                    <ProtectedRoute>
+                    <NonMasterOnly>
                       <Layout>
                         <People />
                       </Layout>
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/organization-dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Layout>
-                        <OrganizationDashboard />
-                      </Layout>
-                    </ProtectedRoute>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
@@ -70,86 +60,114 @@ function App() {
                   }
                 />
                 <Route
+                  path="/organization-dashboard"
+                  element={
+                    <NonMasterOnly>
+                      <Layout>
+                        <OrganizationDashboard />
+                      </Layout>
+                    </NonMasterOnly>
+                  }
+                />
+                <Route
                   path="/facility/:facilityId"
                   element={
-                    <ProtectedRoute>
+                    <NonMasterOnly>
                       <Layout>
                         <FacilityDashboard />
                       </Layout>
-                    </ProtectedRoute>
+                    </NonMasterOnly>
                   }
                 />
 
                 <Route
                   path="/training"
                   element={
-                    <Layout>
-                      <Training />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <Training />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/training-overview"
                   element={
-                    <Layout>
-                      <TrainingOverview />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <TrainingOverview />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/training-course/:facilityId/:courseId"
                   element={
-                    <Layout>
-                      <TrainingCourseDetail />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <TrainingCourseDetail />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/book-training/:facilityId"
                   element={
-                    <Layout>
-                      <BookTraining />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <BookTraining />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/exercise-overview"
                   element={
-                    <Layout>
-                      <ExerciseOverview />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <ExerciseOverview />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/exercise-detail/:facilityId/:exerciseId"
                   element={
-                    <Layout>
-                      <ExerciseDetail />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <ExerciseDetail />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/create-exercise/:facilityId"
                   element={
-                    <Layout>
-                      <CreateExercise />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <CreateExercise />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/exercise-review/:facilityId/:exerciseId"
                   element={
-                    <Layout>
-                      <ExerciseReview />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <ExerciseReview />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route
                   path="/exercises"
                   element={
-                    <Layout>
-                      <ExerciseOverview />
-                    </Layout>
+                    <NonMasterOnly>
+                      <Layout>
+                        <ExerciseOverview />
+                      </Layout>
+                    </NonMasterOnly>
                   }
                 />
                 <Route path="/accept-invite" element={<AcceptInvite />} />

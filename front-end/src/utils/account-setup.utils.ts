@@ -1,9 +1,5 @@
 import type { AccountSetupData, InvitedAdmin } from '@/types';
 
-// ============================================
-// ENUMS
-// ============================================
-
 export enum AccountSetupStep {
   ORGANIZATION_DETAILS = 1,
   USER_DETAILS = 2,
@@ -11,10 +7,6 @@ export enum AccountSetupStep {
   PLAN_SELECTION = 4,
   REVIEW_CONFIRM = 5,
 }
-
-// ============================================
-// DEFAULT VALUES
-// ============================================
 
 export const DEFAULT_ACCOUNT_SETUP_DATA: AccountSetupData = {
   organizationName: '',
@@ -45,10 +37,6 @@ export const DEFAULT_INVITE_DATA: InviteFormData = {
   email: '',
   jobTitle: '',
 };
-
-// ============================================
-// STATIC DATA CONSTANTS
-// ============================================
 
 export const plans = [
   {
@@ -119,10 +107,6 @@ export const industries = [
 
 export const organizationSizes = ['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+'];
 
-// ============================================
-// TYPES FOR VALIDATION
-// ============================================
-
 export interface ValidationField {
   field: string | undefined;
   name: string;
@@ -133,17 +117,12 @@ export interface ValidationResult {
   name: string;
 }
 
-// For invite validation - subset of InvitedAdmin without the id
 export interface InviteFormData {
   firstName: string;
   lastName: string;
   email: string;
   jobTitle: string;
 }
-
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
 
 export const getPlanLimits = (tier: string): { seats: number; facilities: number } => {
   switch (tier) {
@@ -159,10 +138,6 @@ export const getPlanLimits = (tier: string): { seats: number; facilities: number
       return { seats: 0, facilities: 0 };
   }
 };
-
-// ============================================
-// STEP UTILITY FUNCTIONS
-// ============================================
 
 export const getStepTitle = (step: AccountSetupStep): string => {
   switch (step) {
@@ -205,10 +180,6 @@ export const isLastStep = (step: AccountSetupStep): boolean => {
 export const canGoBack = (step: AccountSetupStep): boolean => {
   return step > AccountSetupStep.ORGANIZATION_DETAILS;
 };
-
-// ============================================
-// VALIDATION FUNCTIONS
-// ============================================
 
 export const validateStep1Fields = (formData: AccountSetupData): ValidationResult[] => {
   const requiredFields: ValidationField[] = [

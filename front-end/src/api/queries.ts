@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from './api';
 import type { OnboardingData } from '../hooks/useOnboarding';
+import { UserRole } from '@/types';
 
 export interface User {
   _id: string;
@@ -8,7 +9,7 @@ export interface User {
   name: string;
   email: string;
   phone?: string;
-  role: 'master' | 'admin' | 'occupant';
+  role: UserRole;
   isPointOfContact: boolean;
   inviteStatus: 'pending' | 'accepted';
   createdAt: string;
