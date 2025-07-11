@@ -10,8 +10,8 @@ import type {
   UpdateUserData,
   CreateFacilityData,
   UpdateFacilityData,
-  LoginResponse as MutationLoginResponse,
 } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 
 export function useLoginMutation() {
   const queryClient = useQueryClient();
@@ -46,6 +46,7 @@ export function useForgotPasswordMutation() {
 export function useOnboardingMutation() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (data: OnboardingData & { profilePictureFile?: File }) => {
@@ -62,11 +63,14 @@ export function useOnboardingMutation() {
       return response.data.data;
     },
     onSuccess: data => {
+      toast({
+        title: 'Account Created Successfully',
+        description: 'Welcome to the Emergency Planning System!',
+      });
       if (data?.checkoutUrl) {
         window.location.href = data.checkoutUrl;
         return;
       }
-      // For free plans, continue onboarding flow
       navigate('/facility-setup');
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
       queryClient.invalidateQueries({ queryKey: ['users'] });

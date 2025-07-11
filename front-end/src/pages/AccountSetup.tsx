@@ -181,76 +181,56 @@ const AccountSetup = () => {
     }
   };
 
-  const handleComplete = async () => {
-    try {
-      const onboardingData = {
-        organization: {
-          name: formData.organizationName,
-          address: formData.address,
-          phoneNumber: formData.phone,
-          industry: formData.industry,
-          natureOfWork: formData.natureOfWork,
-          abn: formData.abn,
-          organizationSize: formData.organizationSize,
-          selectedPlan: mapPlanToEnum(selectedPlanLocal || 'tier1'),
-          billingInterval,
-          maxFacilities: getPlanLimits(selectedPlanLocal || 'tier1').facilities,
-          totalSeats: getPlanLimits(selectedPlanLocal || 'tier1').seats,
-        },
-        admin: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.userPhone,
-          role: UserRole.ADMIN,
-        },
-        invitedAdmins: invitedAdmins.map(admin => ({
-          name: `${admin.firstName} ${admin.lastName}`,
-          email: admin.email,
-          phone: '',
-          role: UserRole.ADMIN,
-        })),
-      };
+  const handleComplete = () => {
+    const onboardingData = {
+      organization: {
+        name: formData.organizationName,
+        address: formData.address,
+        phoneNumber: formData.phone,
+        industry: formData.industry,
+        natureOfWork: formData.natureOfWork,
+        abn: formData.abn,
+        organizationSize: formData.organizationSize,
+        selectedPlan: mapPlanToEnum(selectedPlanLocal || 'tier1'),
+        billingInterval,
+        maxFacilities: getPlanLimits(selectedPlanLocal || 'tier1').facilities,
+        totalSeats: getPlanLimits(selectedPlanLocal || 'tier1').seats,
+      },
+      admin: {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.userPhone,
+        role: UserRole.ADMIN,
+      },
+      invitedAdmins: invitedAdmins.map(admin => ({
+        name: `${admin.firstName} ${admin.lastName}`,
+        email: admin.email,
+        phone: '',
+        role: UserRole.ADMIN,
+      })),
+    };
 
-      await submitOnboarding({ ...onboardingData, profilePictureFile });
+    submitOnboarding({ ...onboardingData, profilePictureFile });
 
-      updateState({
-        organization: {
-          name: formData.organizationName,
-          address: formData.address,
-          phoneNumber: formData.phone,
-          industry: formData.industry,
-          natureOfWork: formData.natureOfWork,
-          abn: formData.abn,
-          organizationSize: formData.organizationSize,
-        },
-        account: {
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.userPhone,
-        },
-        currentStep: 'facility-setup',
-      });
-
-      if (invitedAdmins.length > 0) {
-        toast({
-          title: 'Invitations Sent',
-          description: `${invitedAdmins.length} admin invitation(s) will be sent via email`,
-        });
-      }
-
-      toast({
-        title: 'Account Created Successfully',
-        description: 'Welcome to the Emergency Planning System!',
-      });
-    } catch (err) {
-      toast({
-        title: 'Error Creating Account',
-        description: error || 'Failed to create account. Please try again.',
-        variant: 'destructive',
-      });
-    }
+    updateState({
+      organization: {
+        name: formData.organizationName,
+        address: formData.address,
+        phoneNumber: formData.phone,
+        industry: formData.industry,
+        natureOfWork: formData.natureOfWork,
+        abn: formData.abn,
+        organizationSize: formData.organizationSize,
+      },
+      account: {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.userPhone,
+      },
+      currentStep: 'facility-setup',
+    });
   };
 
   const steps = [

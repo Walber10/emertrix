@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
  */
 export const connectToDatabase = async () => {
   if (!process.env.DATABASE_PUBLIC_URL) {
-    throw new Error('Please specify the DATABASE_URL in the .env file.');
+    throw new Error('Please specify the DATABASE_PUBLIC_URL in the .env file.');
   }
 
   try {
