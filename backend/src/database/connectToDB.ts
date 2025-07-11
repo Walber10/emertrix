@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'development') {
  * @returns {Promise<void>} A promise that resolves when the connection is established.
  */
 export const connectToDatabase = async () => {
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.DATABASE_PUBLIC_URL) {
     throw new Error('Please specify the DATABASE_URL in the .env file.');
   }
 
